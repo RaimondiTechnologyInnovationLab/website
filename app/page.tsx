@@ -600,7 +600,7 @@ export default function Home() {
           <div className="page-width">
             <div className="section-heading split-heading" data-reveal>
               <div><p className="eyebrow">03 / People</p><h2>Building<br />the team.</h2></div>
-              <p>The Technology Innovation Lab is a vision in development. These cards introduce Ivan and the expertise envisioned for a future team.</p>
+              <p>The Technology Innovation Lab is a vision in development, driven by the ambition to bring curious minds together at the intersection of biology, engineering, and AI to develop new tools for biological measurement.</p>
             </div>
             <p className="team-stage-note"><strong>A team to build.</strong> The four future roles describe a possible team structure, not current members or advertised positions.</p>
             <div className="people-layout">
