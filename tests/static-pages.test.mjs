@@ -38,9 +38,35 @@ test("all HTML assets exist below the GitHub Pages repository path", async () =>
   for (const asset of assets) await assertLocalAsset(asset);
 });
 
-test("social previews use the public Pages URL", () => {
-  assert.match(html, /https:\/\/raimonditechnologyinnovationlab\.github\.io\/website\/og\.png/);
+test("social previews use the current image at the public Pages URL", async () => {
+  const metadata = [...html.matchAll(/<meta\b[^>]*>/g)].map(([tag]) =>
+    Object.fromEntries([...tag.matchAll(/([\w:-]+)="([^"]*)"/g)].map(([, name, value]) =>
+      [name, value.replaceAll("&amp;", "&")],
+    )),
+  );
+  const values = (name) => metadata
+    .filter((tag) => tag.property === name || tag.name === name)
+    .map((tag) => tag.content);
+  const imageName = "og-til-cells-2026-09.png";
+  const imageURL = new URL(imageName, base).href;
+  assert.deepEqual(values("og:image"), [imageURL]);
+  assert.deepEqual(values("twitter:image"), [imageURL]);
+  assert.doesNotMatch(JSON.stringify(metadata), /\/og\.png|New York skyline/);
   assert.doesNotMatch(html, /localhost|127\.0\.0\.1/);
+
+  const image = await readFile(new URL(imageName, output));
+  assert.ok(image.length >= 33, "Preview must contain a complete PNG header");
+  assert.deepEqual(image.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+  assert.equal(image.toString("ascii", 12, 16), "IHDR");
+  const width = image.readUInt32BE(16);
+  const height = image.readUInt32BE(20);
+  assert.equal(width, 1200);
+  assert.equal(height, 630);
+  assert.deepEqual(values("og:image:width"), [String(width)]);
+  assert.deepEqual(values("og:image:height"), [String(height)]);
+  assert.ok(image.length < 1024 * 1024, "Preview should be under 1 MiB for fast sharing");
+  assert.deepEqual(await readFile(new URL("og.png", output)), image,
+    "The previous image URL must also serve the current preview");
 });
 
 test("CSS assets resolve and all navigation anchors have destinations", async () => {

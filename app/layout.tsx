@@ -37,10 +37,10 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: `${origin}${assetPath("/og.png")}`,
+          url: `${origin}${assetPath("/og-til-cells-2026-09.png")}`,
           width: 1200,
           height: 630,
-          alt: "Technology Innovation Lab @ SCB over a blue-hour New York skyline",
+          alt: "TIL logo and circular cells on black, with Imagining what biology needs Next...",
         },
       ],
     },
@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [`${origin}${assetPath("/og.png")}`],
+      images: [`${origin}${assetPath("/og-til-cells-2026-09.png")}`],
     },
   };
 }

@@ -69,6 +69,16 @@ The Pages workflow builds, checks, and publishes on each push to `main`; it can
 also be run manually from Actions. GitHub supplies the deployment token, so no
 custom credential or paid hosting service is needed in the workflow.
 
+## Link preview image
+
+Open Graph and Twitter use `public/og-til-cells-2026-09.png` (1200 × 630).
+The matching SVG is the editable source; export it at those dimensions after
+visual changes. Keep the preview consistent with the hero when changing the
+site's branding. Use a new image filename in `app/layout.tsx` for a new design,
+and copy the same PNG to `public/og.png` for clients using the previous URL.
+`npm run test:pages` checks the exported image, metadata, and legacy copy.
+Messaging apps may retain previews already cached for a shared page URL.
+
 ## Archived Sites configuration
 
 The previous `chatgpt.site` publication is a separate historical snapshot; it
