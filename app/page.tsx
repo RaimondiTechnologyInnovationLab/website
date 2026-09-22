@@ -309,7 +309,7 @@ export default function Home() {
         setMenuOpen(false);
         // Returning to the hero must not leave keyboard focus in hidden navigation.
         if (header?.querySelector(".nav-links")?.contains(document.activeElement)
-          || document.activeElement === menuRef.current) {
+          || header?.querySelector(".nav-actions")?.contains(document.activeElement)) {
           header?.querySelector<HTMLAnchorElement>(".brand")?.focus({ preventScroll: true });
         }
       }
@@ -473,7 +473,7 @@ export default function Home() {
             ))}
             <a className="mobile-join" href="#join" onClick={() => setMenuOpen(false)}>Get in touch <Arrow /></a>
           </div>
-          <div className="nav-actions">
+          <div className="nav-actions" inert={!navigationVisible} aria-hidden={!navigationVisible}>
             <a className="nav-cta" href="#join">Get in touch <Arrow /></a>
             <button ref={menuRef} type="button" className="menu-toggle"
               aria-label={menuOpen ? "Close navigation" : "Open navigation"}

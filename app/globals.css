@@ -48,10 +48,10 @@ section[id], article[id] { scroll-margin-top: 0; }
 .nav-links { display: flex; align-items: center; gap: 27px; transition: opacity .28s ease; }
 .nav-actions { display: flex; align-items: center; flex-shrink: 0; }
 /* Keep the navigation's space reserved while the hero leads the introduction. */
-.site-header[data-navigation="intro"] :is(.nav-links, .menu-toggle) { visibility: hidden; opacity: 0; pointer-events: none; }
+.site-header[data-navigation="intro"] :is(.nav-links, .nav-cta, .menu-toggle) { visibility: hidden; opacity: 0; pointer-events: none; }
 .nav-links a { font-size: .875rem; line-height: 1.5; padding-block: 10px; transition: opacity .2s; }
 .nav-links a:hover { opacity: .65; }
-.nav-cta { display: inline-flex; align-items: center; gap: 17px; border-radius: 4px; padding: 14px 18px; background: var(--cream); color: var(--ink); font-size: .875rem; font-weight: 600; white-space: nowrap; }
+.nav-cta { display: inline-flex; align-items: center; gap: 17px; border-radius: 4px; padding: 14px 18px; background: var(--cream); color: var(--ink); font-size: .875rem; font-weight: 600; white-space: nowrap; transition: opacity .28s ease; }
 .site-header.is-scrolled .nav-shell {
   background: linear-gradient(112deg, #ffffff0c, #ffffff02 44%, #ffffff07), rgba(13, 15, 14, .60);
   color: #fff;
@@ -304,7 +304,7 @@ a:hover > .arrow-icon, button:hover > .arrow-icon { transform: translateX(3px); 
   .menu-toggle[aria-expanded="true"] span:first-child { transform: translateY(3.5px) rotate(45deg); }
   .menu-toggle[aria-expanded="true"] span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
   .site-header.is-scrolled .menu-toggle { border-color: #ffffff52; }
-  /* A fixed action slot keeps the brand still when the contact link gives way to the menu. */
+  /* Reserve the action slot so the brand stays still when navigation appears. */
   .nav-actions { display: grid; width: 112px; height: 44px; align-items: center; justify-items: end; }
   .nav-actions > :is(.nav-cta, .menu-toggle) { grid-area: 1 / 1; }
   .nav-cta { display: inline-flex; justify-content: center; width: 112px; min-height: 44px; padding: 10px; font-size: .875rem; transition: opacity .28s ease; }
