@@ -34,6 +34,11 @@ const localBindingConfig = {
 };
 
 export default defineConfig(async () => {
+  // Pages serves the same page as static HTML; the existing Sites build is kept.
+  if (process.env.GITHUB_PAGES === "true") {
+    return { base: "/website/", plugins: [vinext()] };
+  }
+
   // Keep Wrangler and Miniflare state project-local. These are non-secret tool
   // settings; application environment belongs in ignored `.env*` files.
   process.env.WRANGLER_WRITE_LOGS ??= "false";

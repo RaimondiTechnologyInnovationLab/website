@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { assetPath } from "./asset-path";
 
 type BackgroundVariant = "cells" | "skyline";
 type Cell = {
@@ -221,7 +222,7 @@ export default function HeroBackground({ variant = "cells", motionEnabled }: { v
     };
   }, [variant]);
 
-  if (variant === "skyline") return <><div className="hero-image" aria-hidden="true" /><div className="hero-shade" aria-hidden="true" /></>;
+  if (variant === "skyline") return <><div className="hero-image" style={{ backgroundImage: `url("${assetPath("/hero-nyc-blue-hour.png")}")` }} aria-hidden="true" /><div className="hero-shade" aria-hidden="true" /></>;
 
   return (
     <div ref={backgroundRef} className="hero-cell-background" aria-hidden="true">

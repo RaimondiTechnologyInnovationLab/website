@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { assetPath } from "./asset-path";
 import "./globals.css";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function siteOrigin(): Promise<string> {
+  // A static export has no request headers; its public origin is known at build time.
+  if (process.env.NEXT_PUBLIC_SITE_ORIGIN) return process.env.NEXT_PUBLIC_SITE_ORIGIN;
   const requestHeaders = await headers();
   const host =
     requestHeaders.get("x-forwarded-host") ??
@@ -13,7 +16,11 @@ export async function generateMetadata(): Promise<Metadata> {
     (host.startsWith("localhost") || host.startsWith("127.0.0.1")
       ? "http"
       : "https");
-  const origin = `${protocol}://${host}`;
+  return `${protocol}://${host}`;
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const origin = await siteOrigin();
   const title = "Ivan Raimondi | Technology Innovation Lab";
   const description =
     "Ivan Raimondi’s research in genomic and multiomic methods, and his vision for a future Technology Innovation Lab.";
@@ -22,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     icons: {
-      icon: { url: "/favicon.svg?v=til-soft-a", type: "image/svg+xml" },
+      icon: { url: assetPath("/favicon.svg?v=til-soft-a"), type: "image/svg+xml" },
     },
     openGraph: {
       title,
@@ -30,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: `${origin}/og.png`,
+          url: `${origin}${assetPath("/og.png")}`,
           width: 1200,
           height: 630,
           alt: "Technology Innovation Lab @ SCB over a blue-hour New York skyline",
@@ -41,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [`${origin}/og.png`],
+      images: [`${origin}${assetPath("/og.png")}`],
     },
   };
 }

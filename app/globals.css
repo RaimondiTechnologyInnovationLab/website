@@ -69,7 +69,7 @@ a:hover > .arrow-icon, button:hover > .arrow-icon { transform: translateX(3px); 
 /* The original skyline remains available alongside the cellular background. */
 .hero { position: relative; isolation: isolate; overflow: hidden; background: #172838; color: #fff; }
 .hero-image, .hero-shade { position: absolute; inset: 0; z-index: -1; }
-.hero-image { background: url("/hero-nyc-blue-hour.png") center 46% / cover no-repeat; }
+.hero-image { background-position: center 46%; background-size: cover; background-repeat: no-repeat; }
 .hero-shade { background: linear-gradient(90deg, #09151dea 0%, #1023357a 56%, #11243820 100%), linear-gradient(0deg, #091119f2 0%, transparent 65%); }
 .hero-cell-background { position: absolute; inset: 0; z-index: -1; isolation: isolate; overflow: hidden; background: #000; pointer-events: none; }
 .hero-cells { position: absolute; inset: 0; z-index: 1; display: block; width: 100%; height: 100%; opacity: 0; }

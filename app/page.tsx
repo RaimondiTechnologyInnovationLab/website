@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroBackground from "./hero-background";
 import LabLogo from "./lab-logo";
+import { assetPath } from "./asset-path";
 
 const people = [
   {
@@ -15,7 +16,7 @@ const people = [
     summary:
       "Ivan develops genomic and multiomic methods for studying individual cells. This site brings together his research and his vision for a future Technology Innovation Lab.",
     signals: ["Genomics", "Multiomics", "Automation"],
-    photo: "/raimondi-ivan-hires.png",
+    photo: assetPath("/raimondi-ivan-hires.png"),
   },
   {
     name: "Experimental scientist",
@@ -79,7 +80,7 @@ const papers = [
     category: "Single-cell / D&D-seq",
     journal: "Cell / Resource",
     cover: "cell",
-    coverImage: "/cell-volume-189-issue-12.jpg",
+    coverImage: assetPath("/cell-volume-189-issue-12.jpg"),
     coverAlt: "Cell Volume 189, Number 12 cover",
     coverCode: "D&D-seq",
     coverTitle: "Mapping regulatory DNA-protein interactions in single cells",
@@ -97,7 +98,7 @@ const papers = [
     category: "Multiomic / NTT-seq",
     journal: "Nature Biotechnology / Article",
     cover: "nature",
-    coverImage: "/nature-biotechnology-volume-41-issue-6.png",
+    coverImage: assetPath("/nature-biotechnology-volume-41-issue-6.png"),
     coverAlt: "Nature Biotechnology Volume 41, Issue 6 cover",
     coverCode: "NTT-seq",
     coverTitle: "Multifactorial chromatin profiling at single-cell resolution",
@@ -465,7 +466,7 @@ export default function Home() {
             </div>
             <div className="hero-bottom">
               <div className="institutional-affiliation" aria-label="Ivan Raimondi’s institutional affiliation: Weill Cornell Medicine">
-                <img src="/wcm-official-white.png" alt="Weill Cornell Medicine" width="660" height="64" />
+                <img src={assetPath("/wcm-official-white.png")} alt="Weill Cornell Medicine" width="660" height="64" />
               </div>
             </div>
           </div>
@@ -523,7 +524,7 @@ export default function Home() {
               <p className="card-topline">Molecular invention</p>
               <div className="card-intro"><h3>Molecular R&amp;D</h3><p>Develop molecular and protein tools that make new measurements possible, beyond the limits of standard assays.</p></div>
               <figure className="protein-folding">
-                <img src="/protein-cartoon.png" alt="Illustration of a folded protein structure" loading="lazy" width="640" height="640" />
+                <img src={assetPath("/protein-cartoon.png")} alt="Illustration of a folded protein structure" loading="lazy" width="640" height="640" />
                 <figcaption>Protein design &amp; molecular tools</figcaption>
               </figure>
             </article>
