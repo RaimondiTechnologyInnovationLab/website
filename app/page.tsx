@@ -7,7 +7,7 @@ import LabLogo from "./lab-logo";
 const people = [
   {
     name: "Ivan Raimondi, PhD",
-    role: "Researcher · Technology development",
+    role: "Director",
     future: false,
     specialty: "Technology invention",
     focus: "High-resolution genomic and multiomic tool building",
