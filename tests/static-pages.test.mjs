@@ -20,7 +20,7 @@ test("Pages contains complete HTML, the approved identity, and no invented colle
   assert.match(html, /A lab in the making/);
   assert.match(html, /Director/);
   assert.match(html, /Building.*?the team/s);
-  assert.match(html, /not current members or advertised positions/);
+  assert.match(html, /Future team/);
   assert.match(html, /class="hero-cells"/);
   assert.match(html, /mailto:ivr4003@med.cornell.edu/);
   assert.doesNotMatch(html, /Lena Hart|Milo Chen|Nora Velez|Theo Mercer/);
