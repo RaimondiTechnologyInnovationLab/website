@@ -699,7 +699,6 @@ export default function Home() {
               <LabLogo className="footer-brand-mark" />
               <span className="footer-brand-copy">Technology<br />Innovation Lab <span className="footer-brand-affiliation">A lab in the making</span></span>
             </a>
-            <p className="footer-purpose">Ivan Raimondi’s research and vision for a future lab.</p>
           </div>
           <div><p className="footer-label">Explore</p><a href="#artifacts">Research</a><a href="#people">People</a><a href="#papers">Publications</a><a href="#join">Get in touch</a></div>
           <div><p className="footer-label">Say hello</p><a href={`mailto:${email}`}>{email}</a><p>Ivan Raimondi<br />Weill Cornell Medicine<br />New York, NY</p></div>
