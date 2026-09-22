@@ -16,7 +16,7 @@ const people = [
     summary:
       "Ivan develops genomic and multiomic methods for studying individual cells. This site brings together his research and his vision for a future Technology Innovation Lab.",
     signals: ["Genomics", "Multiomics", "Automation"],
-    photo: assetPath("/raimondi-ivan-hires.png"),
+    photo: assetPath("/raimondi-ivan-casual.png"),
   },
   {
     name: "Experimental scientist",
@@ -606,7 +606,7 @@ export default function Home() {
             <div className="people-layout">
               <article className="person-feature" id="person-profile" aria-label={person.name} key={person.name}>
                 <div className="portrait-frame">
-                  {person.photo ? <img src={person.photo} alt={person.name} loading="lazy" width="600" height="750" /> : <div className="future-role-portrait" aria-hidden="true"><LabLogo className="future-role-mark" /><div><span>A future direction</span><strong>{person.visualTitle}</strong><p>A role to shape,<br />together.</p></div></div>}
+                  {person.photo ? <img src={person.photo} alt={person.name} loading="lazy" width="1254" height="1254" /> : <div className="future-role-portrait" aria-hidden="true"><LabLogo className="future-role-mark" /><div><span>A future direction</span><strong>{person.visualTitle}</strong><p>A role to shape,<br />together.</p></div></div>}
                   <div className="portrait-status"><span>{person.future ? "Future team" : "Ivan’s profile"}</span><span>{person.future ? "Vision in development" : "Research & invention"}</span></div>
                 </div>
                 <div className="person-copy">
