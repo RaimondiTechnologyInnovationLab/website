@@ -4,6 +4,41 @@ Ivan Raimondi’s research and vision for a future lab.
 
 Public website: https://raimonditechnologyinnovationlab.github.io/website/
 
+Repository: https://github.com/RaimondiTechnologyInnovationLab/website
+
+## One source of truth
+
+The `main` branch on GitHub is the official saved source. This local checkout
+is its working copy; GitHub Pages is built from a specific commit of that same
+branch. Git is version control, not live folder synchronization: local edits
+reach GitHub after a commit and push, and reach the website after a successful
+Pages deployment.
+
+Use this sequence for every update:
+
+1. Check `git status --short --branch`, then `git fetch --prune github`.
+   With a clean working tree, run `git pull --ff-only github main` before editing.
+   Preserve any existing local changes; resolve divergence before proceeding.
+2. Edit the tracked source in this checkout and preview locally. Avoid parallel
+   edits in the GitHub web editor; if another machine or editor changes GitHub,
+   fetch and integrate those changes before pushing.
+3. Run `npm run build:pages`, `npm run test:pages`, and `git diff --check`.
+   Commit the intended files and push `main` to `github`. Never force-push `main`.
+4. Check the Pages workflow for that exact commit. Finish only after its build
+   and deployment succeed; a successful push alone does not update the website.
+5. Fetch again and confirm the working tree is clean and
+   `git rev-list --left-right --count HEAD...github/main` prints `0 0`.
+
+For every additional clone, set `git config --local pull.ff only` and
+`git config --local push.default simple`. These make pulls refuse diverged
+history and keep pushes on the matching tracked branch. Uncommitted work is
+not backed up on GitHub. Use a `codex/` branch for work that should be saved
+remotely before it is ready to publish; only `main` publishes the website.
+
+Generated `out/`, `dist/`, and local backup folders are not sources to edit or
+synchronize. To undo a published change, make a revert commit and publish it
+through the same workflow rather than replacing files manually.
+
 ## Local development
 
 Use Node.js 22.13 or newer:
@@ -34,9 +69,12 @@ The Pages workflow builds, checks, and publishes on each push to `main`; it can
 also be run manually from Actions. GitHub supplies the deployment token, so no
 custom credential or paid hosting service is needed in the workflow.
 
-## Original Sites build
+## Archived Sites configuration
 
-The original hosting path remains available and unchanged by the Pages build:
+The previous `chatgpt.site` publication is a separate historical snapshot; it
+does not follow GitHub updates. GitHub Pages is the official public website.
+Do not publish to Sites or use it as an alternative source unless explicitly
+requested. Its configuration is retained for recovery and compatibility:
 
 ```sh
 npm test

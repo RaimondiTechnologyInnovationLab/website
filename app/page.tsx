@@ -462,7 +462,7 @@ export default function Home() {
             <div className="hero-copy" role="region" aria-label="Lab introduction" tabIndex={0}>
               <p className="eyebrow light">Genomics. Multiomics. Invention.</p>
               <h1><span className="hero-lead">Imagining what biology needs</span><em>Next...</em></h1>
-              <p className="hero-body">Building technologies to see more in a single cell.</p>
+              <p className="hero-body">Building technologies to make the unseen measurable.</p>
             </div>
             <div className="hero-bottom">
               <div className="institutional-affiliation" aria-label="Ivan Raimondi’s institutional affiliation: Weill Cornell Medicine">
