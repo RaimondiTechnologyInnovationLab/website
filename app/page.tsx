@@ -245,6 +245,7 @@ function serverMotionPreference() { return true; }
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navigationVisible, setNavigationVisible] = useState(false);
   const [activePerson, setActivePerson] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
   const [copyStatus, setCopyStatus] = useState("");
@@ -297,9 +298,31 @@ export default function Home() {
 
   useEffect(() => {
     const header = document.querySelector(".site-header");
-    const updateHeader = () => header?.classList.toggle("is-scrolled", window.scrollY > 48);
+    const hero = document.getElementById("home");
+    let headerFrame = 0;
+    const updateHeader = () => {
+      headerFrame = 0;
+      header?.classList.toggle("is-scrolled", window.scrollY > 48);
+      const pastHero = hero ? hero.getBoundingClientRect().bottom <= 0 : true;
+      setNavigationVisible(pastHero);
+      if (!pastHero) {
+        setMenuOpen(false);
+        // Returning to the hero must not leave keyboard focus in hidden navigation.
+        if (header?.querySelector(".nav-links")?.contains(document.activeElement)
+          || document.activeElement === menuRef.current) {
+          header?.querySelector<HTMLAnchorElement>(".brand")?.focus({ preventScroll: true });
+        }
+      }
+    };
+    const scheduleHeader = () => {
+      if (!headerFrame) headerFrame = requestAnimationFrame(updateHeader);
+    };
     updateHeader();
-    window.addEventListener("scroll", updateHeader, { passive: true });
+    window.addEventListener("scroll", scheduleHeader, { passive: true });
+    window.addEventListener("resize", scheduleHeader);
+    window.addEventListener("pageshow", scheduleHeader);
+    const heroSize = new ResizeObserver(scheduleHeader);
+    if (hero) heroSize.observe(hero);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -311,7 +334,11 @@ export default function Home() {
     }, { threshold: 0.08 });
     document.querySelectorAll("[data-reveal]").forEach((element) => observer.observe(element));
     return () => {
-      window.removeEventListener("scroll", updateHeader);
+      cancelAnimationFrame(headerFrame);
+      window.removeEventListener("scroll", scheduleHeader);
+      window.removeEventListener("resize", scheduleHeader);
+      window.removeEventListener("pageshow", scheduleHeader);
+      heroSize.disconnect();
       observer.disconnect();
     };
   }, []);
@@ -430,7 +457,7 @@ export default function Home() {
     <div className="site-shell" data-intro="cinematic" data-motion={motionEnabled ? "on" : "off"}>
       <noscript><style>{`html .site-shell[data-intro="cinematic"] :is(.nav-shell, .hero .eyebrow, .hero h1, .hero-body, .hero-bottom) { animation: none !important; opacity: 1 !important; visibility: visible !important; transform: none !important; }`}</style></noscript>
       <a className="skip-link" href="#main">Skip to content</a>
-      <header className="site-header">
+      <header className="site-header" data-navigation={navigationVisible ? "full" : "intro"}>
         <nav className="nav-shell" aria-label="Primary navigation">
           <a className="brand" href="#home" onClick={() => setMenuOpen(false)}>
             <LabLogo className="brand-mark" />
@@ -439,19 +466,23 @@ export default function Home() {
               <span className="brand-affiliation">A lab in the making</span>
             </span>
           </a>
-          <button ref={menuRef} type="button" className="menu-toggle"
-            aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-            aria-expanded={menuOpen} aria-controls="primary-links"
-            onClick={() => setMenuOpen((open) => !open)}>
-            <span /><span />
-          </button>
-          <div id="primary-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}>
+          <div id="primary-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}
+            inert={!navigationVisible} aria-hidden={!navigationVisible}>
             {[["Research", "#artifacts"], ["Approach", "#vision"], ["People", "#people"], ["Publications", "#papers"]].map(([label, href]) => (
               <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
             ))}
             <a className="mobile-join" href="#join" onClick={() => setMenuOpen(false)}>Get in touch <Arrow /></a>
           </div>
-          <a className="nav-cta" href="#join">Get in touch <Arrow /></a>
+          <div className="nav-actions">
+            <a className="nav-cta" href="#join">Get in touch <Arrow /></a>
+            <button ref={menuRef} type="button" className="menu-toggle"
+              aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={menuOpen} aria-controls="primary-links"
+              disabled={!navigationVisible}
+              onClick={() => setMenuOpen((open) => !open)}>
+              <span /><span />
+            </button>
+          </div>
         </nav>
       </header>
 
@@ -460,7 +491,7 @@ export default function Home() {
           <HeroBackground variant="cells" motionEnabled={motionEnabled} />
           <div className="hero-content page-width">
             <div className="hero-copy" role="region" aria-label="Lab introduction" tabIndex={0}>
-              <p className="eyebrow light">Genomics. Multiomics. Invention.</p>
+              <p className="eyebrow light">Genomics. Multiomics. Automation.</p>
               <h1><span className="hero-lead">Imagining what biology needs</span><em>Next...</em></h1>
               <p className="hero-body">Building technologies to make the unseen measurable.</p>
             </div>
