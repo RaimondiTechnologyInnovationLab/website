@@ -8,7 +8,7 @@ import { assetPath } from "./asset-path";
 const people = [
   {
     name: "Ivan Raimondi, PhD",
-    role: "Director",
+    role: "Principal Investigator",
     future: false,
     specialty: "Technology invention",
     focus: "High-resolution genomic and multiomic tool building",

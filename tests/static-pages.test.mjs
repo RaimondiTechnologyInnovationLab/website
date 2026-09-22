@@ -18,7 +18,7 @@ async function assertLocalAsset(value, source = base) {
 test("Pages contains complete HTML, the approved identity, and no invented colleagues", () => {
   assert.match(html, /<title>Ivan Raimondi \| Technology Innovation Lab<\/title>/);
   assert.match(html, /A lab in the making/);
-  assert.match(html, /Director/);
+  assert.match(html, /Principal Investigator/);
   assert.match(html, /Building.*?the team/s);
   assert.match(html, /Future team/);
   assert.match(html, /class="hero-cells"/);
