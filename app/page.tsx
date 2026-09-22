@@ -1,62 +1,69 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import HeroBackground from "./hero-background";
+import LabLogo from "./lab-logo";
 
 const people = [
   {
     name: "Ivan Raimondi, PhD",
-    role: "Principal Investigator",
+    role: "Researcher · Technology development",
+    future: false,
     specialty: "Technology invention",
     focus: "High-resolution genomic and multiomic tool building",
-    mode: "Lab strategy / platform design",
+    mode: "Molecular invention / experimental design",
     summary:
-      "Leads technology invention across genomics, multiomics, and automation systems, setting the scientific direction for the lab's platform work.",
+      "Ivan develops genomic and multiomic methods for studying individual cells. This site brings together his research and his vision for a future Technology Innovation Lab.",
     signals: ["Genomics", "Multiomics", "Automation"],
     photo: "/raimondi-ivan-hires.png",
   },
   {
-    name: "Lena Hart",
-    role: "Senior Scientist, Single-Cell Systems",
+    name: "Experimental scientist",
+    role: "Future team",
+    future: true,
     specialty: "Single-cell workflow design",
     focus: "Assay architecture for sparse and fragile samples",
     mode: "Experimental optimization",
     summary:
-      "Designs single-cell workflows that connect assay sensitivity with experimental robustness, translating difficult biology into stable measurements.",
+      "An envisioned role focused on developing and validating single-cell experiments, from sample preparation to reliable measurements. Interested in shaping this direction? Let’s start a conversation.",
     signals: ["Single-cell", "Assays", "Signal quality"],
-    initials: "LH",
+    visualTitle: "Experiment.",
   },
   {
-    name: "Milo Chen",
-    role: "Staff Scientist, Multiomic Methods",
-    specialty: "Multiomic assay development",
-    focus: "Integrated readouts across chromatin and expression",
-    mode: "Method invention",
+    name: "Molecular engineer",
+    role: "Future team",
+    future: true,
+    specialty: "Molecular and protein engineering",
+    focus: "New molecular tools for biological measurement",
+    mode: "Design / build / validate",
     summary:
-      "Builds and validates multiomic assays that combine regulatory, transcriptional, and phenotypic readouts into one coherent experimental surface.",
-    signals: ["Chromatin", "RNA", "Integrated profiling"],
-    initials: "MC",
+      "An envisioned role focused on designing molecular tools that make new biological measurements possible. Bring an interest in invention, molecular design, and turning an idea into an assay.",
+    signals: ["Molecular tools", "Protein design", "Assays"],
+    visualTitle: "Invent.",
   },
   {
-    name: "Nora Velez",
-    role: "Automation Engineer",
+    name: "Automation engineer",
+    role: "Future team",
+    future: true,
     specialty: "Robotic workflow engineering",
     focus: "Automation for sensitive molecular protocols",
     mode: "System calibration",
     summary:
-      "Turns delicate laboratory protocols into reproducible robotic routines, reducing variance and scaling throughput without losing experimental nuance.",
+      "An envisioned role focused on translating sensitive laboratory protocols into reproducible automated workflows. Help imagine how robotics and careful engineering could support the next generation of experiments.",
     signals: ["Robotics", "Instrumentation", "Reproducibility"],
-    initials: "NV",
+    visualTitle: "Automate.",
   },
   {
-    name: "Theo Mercer",
-    role: "Computational Genomics Lead",
+    name: "Computational scientist",
+    role: "Future team",
+    future: true,
     specialty: "Computational genomics",
     focus: "Inference pipelines for high-dimensional datasets",
     mode: "Modeling / interpretation",
     summary:
-      "Builds analysis systems that keep complex measurements interpretable, linking raw readouts to decision-ready biological signal.",
+      "An envisioned role focused on turning complex genomic and multiomic measurements into interpretable biological insights. Connect experimental questions with models, analysis, and new ways to understand the data.",
     signals: ["Inference", "Pipelines", "Data systems"],
-    initials: "TM",
+    visualTitle: "Interpret.",
   },
 ];
 
@@ -102,7 +109,7 @@ const papers = [
     title: "Phylogenetic mapping in aging esophagus",
     copy:
       "SMART-PTA links genome and transcriptome in single cells to reconstruct clonal evolution across the human aging esophagus.",
-    label: "Read preprint / 2025.10.11",
+    label: "Read preprint / 2025",
     href: "https://www.biorxiv.org/content/10.1101/2025.10.11.681805v1",
     year: "2025",
     category: "Lineage / SMART-PTA",
@@ -112,35 +119,25 @@ const papers = [
     coverAlt: "SMART-PTA bioRxiv preprint cover",
     coverCode: "SMART-PTA",
     coverTitle: "Phylogenetic mapping across the aging human esophagus",
-    issue: "Posted / 11 Oct 2025",
+    issue: "Preprint / 2025",
     doi: "10.1101/2025.10.11.681805",
   },
 ];
 
 const tracks = [
   {
-    label: "PhD Track",
-    status: "Open",
-    count: "02 openings",
-    title: "Train where genomics, multiomics, and automation converge.",
+    label: "Research conversations",
+    title: "Exchange ideas about biological questions and the tools needed to answer them.",
   },
   {
-    label: "Postdoc Track",
-    status: "Open",
-    count: "01 opening",
-    title: "Lead a frontier program from first sketch to first preprint.",
+    label: "Possible collaborations",
+    title: "Discuss shared interests in molecular methods, single-cell measurements, or automation.",
   },
   {
-    label: "Visiting / Rotation",
-    status: "Selective",
-    count: "Limited",
-    title: "Join a live research engine and test the fit in motion.",
+    label: "Future team",
+    title: "Introduce your interests and expertise as the vision for the lab develops.",
   },
 ];
-
-const manifesto =
-  "We build integrated technologies that increase biological signal, reduce experimental noise, and make complex measurement reproducible at scale.";
-const manifestoWords = manifesto.split(" ");
 
 const omicsLayers = [
   { label: "RNA", detail: "Expression", value: "0.82", clusters: [1, 2], clusterLabel: "02 + 03", signal: [3, 6, 4, 9, 7, 11] },
@@ -175,9 +172,9 @@ const umapCells = umapClusters.flatMap((cluster, clusterIndex) =>
 );
 
 const robotPhases = [
-  { code: "01", label: "Load", detail: "Plate registered" },
-  { code: "02", label: "Process", detail: "384 wells processing" },
-  { code: "03", label: "Read", detail: "Signal acquired" },
+  { code: "01", label: "Prepare", detail: "Bring samples into a consistent, repeatable workflow." },
+  { code: "02", label: "Process", detail: "Translate sensitive molecular protocols into automated steps." },
+  { code: "03", label: "Measure", detail: "Connect experimental consistency with interpretable readouts." },
 ];
 
 function Arrow() {
@@ -230,655 +227,432 @@ function PublicationCover({
   );
 }
 
+const email = "ivr4003@med.cornell.edu";
+const manifesto = "The goal is to build integrated technologies that increase biological signal, reduce experimental noise, and make complex measurement reproducible at scale.";
+
+function subscribeMotionPreference(onChange: () => void) {
+  const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  preference.addEventListener("change", onChange);
+  return () => preference.removeEventListener("change", onChange);
+}
+
+function readMotionPreference() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function serverMotionPreference() { return true; }
+
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activePerson, setActivePerson] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copyStatus, setCopyStatus] = useState("");
   const [activeLayer, setActiveLayer] = useState(0);
   const [robotPhase, setRobotPhase] = useState(0);
+  const prefersReducedMotion = useSyncExternalStore(subscribeMotionPreference, readMotionPreference, serverMotionPreference);
+  const motionEnabled = !prefersReducedMotion;
+  const layerPinned = useRef(false);
+  const robotPinned = useRef(false);
+  const personHoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const menuRef = useRef<HTMLButtonElement>(null);
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const person = people[activePerson];
 
   useEffect(() => {
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reducedMotion) return;
-
-    const layerTimer = window.setInterval(
-      () => setActiveLayer((current) => (current + 1) % omicsLayers.length),
-      1900,
-    );
-    const robotTimer = window.setInterval(
-      () => setRobotPhase((current) => (current + 1) % robotPhases.length),
-      2400,
-    );
-
-    return () => {
-      window.clearInterval(layerTimer);
-      window.clearInterval(robotTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+    const closeMenu = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && menuOpen) {
         setMenuOpen(false);
-        setContactOpen(false);
+        menuRef.current?.focus();
       }
     };
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
+    window.addEventListener("keydown", closeMenu);
+    return () => window.removeEventListener("keydown", closeMenu);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog || !contactOpen) return;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    const dismissBackdrop = (event: MouseEvent) => {
+      if (event.target === dialog) setContactOpen(false);
+    };
+    dialog.addEventListener("click", dismissBackdrop);
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+    return () => {
+      dialog.removeEventListener("click", dismissBackdrop);
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+      previousFocus?.focus();
+    };
+  }, [contactOpen]);
+
+  useEffect(() => () => {
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+    if (personHoverTimer.current) clearTimeout(personHoverTimer.current);
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const reveals = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-reveal]"),
-    );
-    const visionSection = document.querySelector<HTMLElement>("#vision");
-    const visionWords = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-vision-word]"),
-    );
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-
-    if (reducedMotion) {
-      reveals.forEach((node) => node.classList.add("is-visible"));
-      visionWords.forEach((word) => {
-        word.style.opacity = "1";
-        word.style.transform = "none";
-        word.style.filter = "none";
+    const header = document.querySelector(".site-header");
+    const updateHeader = () => header?.classList.toggle("is-scrolled", window.scrollY > 48);
+    updateHeader();
+    window.addEventListener("scroll", updateHeader, { passive: true });
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (!reducedMotion.matches) entry.target.classList.add("enter-view");
+          observer.unobserve(entry.target);
+        }
       });
-      root.style.setProperty("--vision-bar-progress", "1");
-      return;
-    }
-
-    root.classList.add("motion-ready");
-
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
-          revealObserver.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.14, rootMargin: "0px 0px -7% 0px" },
-    );
-
-    reveals.forEach((node) => revealObserver.observe(node));
-
-    let scrollFrame = 0;
-    const updateScrollMotion = () => {
-      scrollFrame = 0;
-      const scrollY = window.scrollY;
-      const viewport = Math.max(window.innerHeight, 1);
-      const pageRange = Math.max(
-        document.documentElement.scrollHeight - viewport,
-        1,
-      );
-      const heroProgress = Math.min(scrollY / viewport, 1);
-      const visionBounds = visionSection?.getBoundingClientRect();
-      const visionScrollRange = visionSection
-        ? Math.max(visionSection.offsetHeight - viewport, 1)
-        : 1;
-      const visionProgress = visionBounds
-        ? Math.max(
-            0,
-            Math.min(
-              (viewport * 0.06 - visionBounds.top) / visionScrollRange,
-              1,
-            ),
-          )
-        : 0;
-
-      root.style.setProperty(
-        "--page-progress",
-        `${Math.min(scrollY / pageRange, 1)}`,
-      );
-      root.style.setProperty(
-        "--hero-copy-shift",
-        `${Math.min(scrollY * 0.08, 54)}px`,
-      );
-      root.style.setProperty("--hero-fade", `${1 - heroProgress * 0.58}`);
-      root.style.setProperty("--grid-shift", `${scrollY * 0.035}px`);
-      root.style.setProperty(
-        "--vision-bar-progress",
-        `${Math.max(0, Math.min((visionProgress - 0.05) / 0.88, 1))}`,
-      );
-
-      visionWords.forEach((word, index) => {
-        const wordStart =
-          (index / Math.max(visionWords.length, 1)) * 0.86;
-        const localProgress = Math.max(
-          0,
-          Math.min((visionProgress - wordStart) / 0.11, 1),
-        );
-        const eased =
-          localProgress *
-          localProgress *
-          localProgress *
-          (localProgress * (localProgress * 6 - 15) + 10);
-
-        word.style.opacity = `${0.12 + eased * 0.88}`;
-        word.style.transform = `translate3d(0, ${(1 - eased) * 12}px, 0)`;
-        word.style.filter = `blur(${(1 - eased) * 1.2}px)`;
-      });
-      document
-        .querySelector(".site-header")
-        ?.classList.toggle("is-scrolled", scrollY > 36);
-    };
-
-    const onScroll = () => {
-      if (scrollFrame) return;
-      scrollFrame = window.requestAnimationFrame(updateScrollMotion);
-    };
-
-    const magneticItems = Array.from(
-      document.querySelectorAll<HTMLElement>(".button, .nav-cta"),
-    );
-    const magneticListeners = magneticItems.map((item) => {
-      const move = (event: PointerEvent) => {
-        if (event.pointerType === "touch") return;
-        const bounds = item.getBoundingClientRect();
-        const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-        const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-        item.style.setProperty("--mag-x", `${x * 10}px`);
-        item.style.setProperty("--mag-y", `${y * 8}px`);
-      };
-      const leave = () => {
-        item.style.setProperty("--mag-x", "0px");
-        item.style.setProperty("--mag-y", "0px");
-      };
-      item.addEventListener("pointermove", move);
-      item.addEventListener("pointerleave", leave);
-      return { item, move, leave };
-    });
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    updateScrollMotion();
-
+    }, { threshold: 0.08 });
+    document.querySelectorAll("[data-reveal]").forEach((element) => observer.observe(element));
     return () => {
-      revealObserver.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      magneticListeners.forEach(({ item, move, leave }) => {
-        item.removeEventListener("pointermove", move);
-        item.removeEventListener("pointerleave", leave);
-      });
-      if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
-      root.classList.remove("motion-ready");
+      window.removeEventListener("scroll", updateHeader);
+      observer.disconnect();
     };
   }, []);
 
+  useEffect(() => {
+    const section = document.querySelector<HTMLElement>("#artifacts");
+    if (!section) return;
+    let visible = false;
+    let layerTimer: ReturnType<typeof setInterval> | undefined;
+    let robotTimer: ReturnType<typeof setInterval> | undefined;
+    const clearTimers = () => {
+      clearInterval(layerTimer);
+      clearInterval(robotTimer);
+    };
+    const syncPlayback = () => {
+      clearTimers();
+      const playing = motionEnabled && visible && !document.hidden;
+      section.dataset.playing = String(playing);
+      if (!playing) return;
+      layerTimer = setInterval(() => {
+        if (!layerPinned.current && !section.querySelector(".multiomics-card")?.matches(":focus-within")) {
+          setActiveLayer((current) => (current + 1) % omicsLayers.length);
+        }
+      }, 1900);
+      robotTimer = setInterval(() => {
+        if (!robotPinned.current && !section.querySelector(".robotics-card")?.matches(":focus-within")) {
+          setRobotPhase((current) => (current + 1) % robotPhases.length);
+        }
+      }, 2400);
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      syncPlayback();
+    });
+    observer.observe(section);
+    document.addEventListener("visibilitychange", syncPlayback);
+    return () => {
+      clearTimers();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", syncPlayback);
+      section.dataset.playing = "false";
+    };
+  }, [motionEnabled]);
+
+  useEffect(() => {
+    const hero = document.querySelector<HTMLElement>(".hero");
+    const vision = document.querySelector<HTMLElement>("#vision");
+    const visionContent = vision?.querySelector<HTMLElement>(".vision-content");
+    const words = Array.from(document.querySelectorAll<HTMLElement>("[data-vision-word]"));
+    let frame = 0;
+    let stickyTop = 0;
+    let stickyTravel = 0;
+    let isSticky = false;
+    const measure = () => {
+      if (!vision || !visionContent) return;
+      const layout = getComputedStyle(visionContent);
+      stickyTop = parseFloat(layout.top) || 0;
+      stickyTravel = vision.offsetHeight - visionContent.offsetHeight;
+      isSticky = layout.position === "sticky" && stickyTravel > 0;
+    };
+    const update = () => {
+      frame = 0;
+      const viewport = window.innerHeight;
+      const bounds = vision?.getBoundingClientRect();
+      // Let the words light up while the manifesto is held in view.
+      const travel = bounds ? (isSticky
+        ? (stickyTop - bounds.top) / stickyTravel
+        : (viewport * .6 - bounds.top) / Math.max(bounds.height - viewport * .1, viewport * .4)) : 1;
+      const progress = Math.max(0, Math.min(1, travel));
+      hero?.style.setProperty("--hero-drift", `${motionEnabled ? Math.min(window.scrollY * .09, 68) : 0}px`);
+      words.forEach((word, index) => {
+        const local = Math.max(0, Math.min(1, (progress - index / Math.max(words.length - 1, 1) * .8) / .12));
+        word.style.setProperty("--word-reveal", String(motionEnabled ? local : 1));
+      });
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const resize = () => { measure(); schedule(); };
+    measure();
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", resize);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", resize);
+    };
+  }, [motionEnabled]);
+
+  const cancelPersonPreview = () => {
+    if (personHoverTimer.current) clearTimeout(personHoverTimer.current);
+  };
+
+  const selectPerson = (index: number) => {
+    cancelPersonPreview();
+    setActivePerson(index);
+  };
+
+  const openContact = () => {
+    setCopyStatus("");
+    setMenuOpen(false);
+    setContactOpen(true);
+  };
+
   const copyEmail = async () => {
-    await navigator.clipboard.writeText("ivr4003@med.cornell.edu");
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1800);
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopyStatus("Email address copied.");
+    } catch {
+      setCopyStatus("Select the address above to copy it, or use Email Ivan.");
+    }
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+    copyTimer.current = setTimeout(() => setCopyStatus(""), 5000);
   };
 
   return (
-    <div className="site-shell">
-      <svg className="noise-defs" aria-hidden="true">
-        <filter id="site-noise">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.86"
-            numOctaves="2"
-            stitchTiles="stitch"
-          />
-        </filter>
-      </svg>
-      <div className="noise-overlay" aria-hidden="true" />
-      <div className="page-progress" aria-hidden="true" />
+    <div className="site-shell" data-intro="cinematic" data-motion={motionEnabled ? "on" : "off"}>
+      <noscript><style>{`html .site-shell[data-intro="cinematic"] :is(.nav-shell, .hero .eyebrow, .hero h1, .hero-body, .hero-bottom) { animation: none !important; opacity: 1 !important; visibility: visible !important; transform: none !important; }`}</style></noscript>
+      <a className="skip-link" href="#main">Skip to content</a>
       <header className="site-header">
         <nav className="nav-shell" aria-label="Primary navigation">
           <a className="brand" href="#home" onClick={() => setMenuOpen(false)}>
-            Technology Innovation Lab <span>@ SCB</span>
+            <LabLogo className="brand-mark" />
+            <span className="brand-copy">
+              <span className="brand-name">Technology <span className="brand-name-tail">Innovation Lab</span></span>
+              <span className="brand-affiliation">A lab in the making</span>
+            </span>
           </a>
-          <button
-            type="button"
-            className="menu-toggle"
+          <button ref={menuRef} type="button" className="menu-toggle"
             aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <span />
-            <span />
+            aria-expanded={menuOpen} aria-controls="primary-links"
+            onClick={() => setMenuOpen((open) => !open)}>
+            <span /><span />
           </button>
-          <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>
-            {[
-              ["Core", "#artifacts"],
-              ["Vision", "#vision"],
-              ["People", "#people"],
-              ["Papers", "#papers"],
-            ].map(([label, href]) => (
-              <a key={label} href={href} onClick={() => setMenuOpen(false)}>
-                {label}
-              </a>
+          <div id="primary-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}>
+            {[["Research", "#artifacts"], ["Approach", "#vision"], ["People", "#people"], ["Publications", "#papers"]].map(([label, href]) => (
+              <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
             ))}
+            <a className="mobile-join" href="#join" onClick={() => setMenuOpen(false)}>Get in touch <Arrow /></a>
           </div>
-          <a className="nav-cta" href="#join">
-            Join the Lab <Arrow />
-          </a>
+          <a className="nav-cta" href="#join">Get in touch <Arrow /></a>
         </nav>
       </header>
 
-      <main>
+      <main id="main" tabIndex={-1}>
         <section id="home" className="hero">
-          <div className="hero-image" />
-          <div className="hero-shade" />
+          <HeroBackground variant="cells" motionEnabled={motionEnabled} />
           <div className="hero-content page-width">
-            <div className="hero-copy">
-              <p className="eyebrow light">Innovation / Genomics / Automation</p>
-              <p className="hero-lead">Imagining what biology needs</p>
-              <h1>Next...</h1>
-              <p className="hero-body">
-                We invent genomic, multiomic, and automated technologies for
-                higher-resolution biological discovery.
-              </p>
+            <div className="hero-copy" role="region" aria-label="Lab introduction" tabIndex={0}>
+              <p className="eyebrow light">Genomics. Multiomics. Invention.</p>
+              <h1><span className="hero-lead">Imagining what biology needs</span><em>Next...</em></h1>
+              <p className="hero-body">Building technologies to see more in a single cell.</p>
             </div>
             <div className="hero-bottom">
-              <div className="hero-actions">
-                <a className="button button-light" href="#artifacts">
-                  Explore Projects <Arrow />
-                </a>
-                <button
-                  type="button"
-                  className="button button-ghost"
-                  onClick={() => setContactOpen(true)}
-                >
-                  Contact the Lab <Arrow />
-                </button>
-              </div>
-              <div
-                className="institutional-affiliation"
-                aria-label="Institutional affiliation: Weill Cornell Medicine"
-              >
-                <img
-                  src="/wcm-official-white.png"
-                  alt="Weill Cornell Medicine"
-                  width="660"
-                  height="64"
-                />
+              <div className="institutional-affiliation" aria-label="Ivan Raimondi’s institutional affiliation: Weill Cornell Medicine">
+                <img src="/wcm-official-white.png" alt="Weill Cornell Medicine" width="660" height="64" />
               </div>
             </div>
           </div>
         </section>
 
+        <a className="research-highlight" href="#paper-dd-seq">
+          <div className="page-width highlight-layout">
+            <span className="highlight-label">In focus <span>Cell · 2026</span></span>
+            <span className="highlight-title"><strong>D&amp;D-seq</strong> Capturing DNA–protein interactions, one cell at a time.</span>
+            <span className="highlight-action">Explore the work <Arrow /></span>
+          </div>
+        </a>
+
         <section id="artifacts" className="core-section page-width section-pad">
-          <div className="section-heading" data-reveal="heading">
-            <p className="eyebrow">Core Platforms</p>
-            <h2>From molecular invention to scalable platforms.</h2>
+          <div className="section-heading split-heading" data-reveal>
+            <div><p className="eyebrow">01 / Research</p><h2>New tools.<br /><em>New possibilities.</em></h2></div>
+            <p>My research connects molecular invention, single-cell measurement, and automation to make difficult biological questions experimentally accessible.</p>
           </div>
           <div className="platform-grid">
-            <article className="platform-card multiomics-card" data-reveal="card">
-              <div className="card-topline">
-                <span>01 / Single-cell</span>
-                <span className="signal-dot" />
-              </div>
-              <div className="card-intro">
-                <h3>Multiomics</h3>
-                <p>
-                  Integrated genomic technologies to map genotype, regulation,
-                  and phenotype at single-cell resolution.
-                </p>
-              </div>
+            <article className="platform-card multiomics-card" data-reveal>
+              <p className="card-topline">Single-cell systems</p>
+              <div className="card-intro"><h3>Multiomics</h3><p>Read different layers of biology together, connecting the genome, its regulation, and gene expression in individual cells.</p></div>
               <div className="omics-console">
                 <div className="omics-map" aria-hidden="true">
                   <div className="umap-plot">
-                    <span className="umap-axis umap-axis-x">UMAP 1</span>
-                    <span className="umap-axis umap-axis-y">UMAP 2</span>
                     <div className="umap-cells" key={activeLayer}>
-                      {umapCells.map((cell, index) => (
-                        <i
-                          key={`${cell.cluster}-${index}`}
-                          className={`umap-cell ${
-                            omicsLayers[activeLayer].clusters.includes(cell.cluster)
-                              ? "highlighted"
-                              : ""
-                          }`}
-                          style={
-                            {
-                              "--cell-x": `${cell.x}%`,
-                              "--cell-y": `${cell.y}%`,
-                              "--cell-delay": `${(index % 13) * 18}ms`,
-                            } as React.CSSProperties
-                          }
-                        />
-                      ))}
-                    </div>
-                    {umapClusters.map((cluster, index) => (
-                      <span
-                        key={index}
-                        className={`umap-cluster-label label-${index + 1}`}
-                      >
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
+                    {umapCells.map((cell, index) => (
+                      <i key={index} className={`umap-cell ${omicsLayers[activeLayer].clusters.includes(cell.cluster) ? "highlighted" : ""}`}
+                        style={{ "--cell-x": `${cell.x}%`, "--cell-y": `${cell.y}%`, "--cell-delay": `${index % 13 * 18}ms` } as React.CSSProperties} />
                     ))}
+                    </div>
                   </div>
-                  <div className="omics-fusion">
+                  <div className="omics-fusion" key={activeLayer}>
                     <small>Single-cell UMAP</small>
-                    <strong className={omicsLayers[activeLayer].label.length > 8 ? "long" : ""}>
-                      {omicsLayers[activeLayer].label}
-                    </strong>
-                    <span>Clusters {omicsLayers[activeLayer].clusterLabel}</span>
-                    <b key={activeLayer}>
-                      {omicsLayers[activeLayer].detail} / {omicsLayers[activeLayer].value}
-                    </b>
+                    <strong>{omicsLayers[activeLayer].label}</strong>
+                    <span>{omicsLayers[activeLayer].detail}</span>
                   </div>
                 </div>
-                <div className="layer-stack" aria-label="Multiomic signal layers">
+                <div className="layer-stack" aria-label="Explore molecular layers">
                   {omicsLayers.map((layer, index) => (
-                    <button
-                      key={layer.label}
-                      type="button"
-                      className={`omics-layer layer-${index + 1} ${
-                        activeLayer === index ? "active" : ""
-                      }`}
-                      aria-pressed={activeLayer === index}
-                      onClick={() => setActiveLayer(index)}
-                    >
-                      <span className="layer-index">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="layer-meta">
-                        <span className="layer-name">{layer.label}</span>
-                        <small>{layer.detail}</small>
-                      </span>
+                    <button key={layer.label} type="button" className={`omics-layer ${activeLayer === index ? "active" : ""}`}
+                      aria-pressed={activeLayer === index} onClick={() => { layerPinned.current = true; setActiveLayer(index); }}>
+                      <span className="layer-index">{String(index + 1).padStart(2, "0")}</span>
+                      <span className="layer-meta"><strong>{layer.label}</strong><small>{layer.detail}</small></span>
                       <span className="layer-signal" aria-hidden="true">
-                        {layer.signal.map((height, signalIndex) => (
-                          <i
-                            key={signalIndex}
-                            style={{ "--signal-height": height } as React.CSSProperties}
-                          />
-                        ))}
+                        {layer.signal.map((height, signalIndex) => <i key={signalIndex} style={{ "--signal-height": height, "--signal-delay": `${signalIndex * -140}ms` } as React.CSSProperties} />)}
                       </span>
-                      <strong className="layer-value">{layer.value}</strong>
                     </button>
                   ))}
                 </div>
+                <p className="figure-note">Explore the layers · Illustrative single-cell map</p>
               </div>
             </article>
-
-            <article className="platform-card assay-card" data-reveal="card" data-delay="1">
-              <div className="card-topline">
-                <span>02 / Molecular Systems</span>
-                <span>Live Trajectory</span>
-              </div>
-              <div className="card-intro">
-                <h3>Molecular R&amp;D</h3>
-                <p>
-                  New molecular and protein technologies built to create
-                  function and reveal biology beyond standard workflows.
-                </p>
-              </div>
-              <figure
-                className="protein-folding"
-                aria-label="Stylized animated protein structure"
-              >
-                <span className="protein-motion" aria-hidden="true" />
-                <figcaption>
-                  <span>Molecular R&amp;D</span>
-                  <strong>Engineered protein model</strong>
-                </figcaption>
+            <article className="platform-card assay-card" data-reveal>
+              <p className="card-topline">Molecular invention</p>
+              <div className="card-intro"><h3>Molecular R&amp;D</h3><p>Develop molecular and protein tools that make new measurements possible, beyond the limits of standard assays.</p></div>
+              <figure className="protein-folding">
+                <img src="/protein-cartoon.png" alt="Illustration of a folded protein structure" loading="lazy" width="640" height="640" />
+                <figcaption>Protein design &amp; molecular tools</figcaption>
               </figure>
-              <div className="protein-feed">
-                <span className="live-indicator" />
-                <span>Structure exploration active</span>
-              </div>
-              <p className="data-readout">Protein design / molecular modeling</p>
             </article>
-
-            <article className="platform-card robotics-card" data-reveal="card" data-delay="2">
-              <div className="card-topline">
-                <span>03 / Automation</span>
-                <span>Queue Active</span>
-              </div>
-              <div className="card-intro">
-                <h3>Robotics</h3>
-                <p>
-                  Automated experimental systems that turn fragile protocols
-                  into scalable platforms.
-                </p>
-              </div>
+            <article className="platform-card robotics-card" data-reveal>
+              <p className="card-topline">Experimental engineering</p>
+              <div className="card-intro"><h3>Robotics</h3><p>Turn sensitive protocols into repeatable workflows, bringing consistency from the first sample to the next experiment.</p></div>
               <div className="robot-console">
-                <div
-                  className="batch-cadence"
-                  aria-label="Weekly batch schedule: Monday, Wednesday, and Friday"
-                >
-                  <div className="batch-cadence-head">
-                    <span>Weekly batch cadence</span>
-                    <strong>Mon / Wed / Fri</strong>
-                  </div>
-                  <div className="schedule-track" aria-hidden="true">
-                    {["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map(
-                      (day, index) => (
-                        <span
-                          key={day}
-                          className={[0, 2, 4].includes(index) ? "active" : ""}
-                        >
-                          {day}
-                        </span>
-                      ),
-                    )}
-                  </div>
-                </div>
                 <div className={`robot-stage phase-${robotPhase}`} aria-hidden="true">
                   <div className="robot-grid" />
-                  <div className="automation-meta">
-                    <span>384-well plate</span>
-                    <strong>{robotPhases[robotPhase].label}</strong>
-                  </div>
+                  <div className="automation-meta"><span>Experimental workflow</span><strong>{robotPhases[robotPhase].label}</strong></div>
                   <div className="robot-rail" />
                   <div className="scanner-beam" />
-                  <div className="sample-carrier">
-                    {Array.from({ length: 12 }, (_, index) => (
-                      <i key={index} />
-                    ))}
-                  </div>
-                  <div className="robot-stations">
-                    {robotPhases.map((phase, index) => (
-                      <span key={phase.code} className={robotPhase === index ? "active" : ""}>
-                        <i>{phase.code}</i>
-                        {phase.label}
-                      </span>
-                    ))}
-                  </div>
+                  <div className="sample-carrier">{Array.from({ length: 12 }, (_, index) => <i key={index} />)}</div>
+                  <div className="robot-stations">{robotPhases.map((phase, index) => <span key={phase.code} className={robotPhase === index ? "active" : ""}><i>{phase.code}</i>{phase.label}</span>)}</div>
                 </div>
-                <div className="robot-feed" aria-live="polite">
-                  <span className="live-indicator" />
-                  <span key={robotPhase}>{robotPhases[robotPhase].detail}</span>
-                  <strong>{robotPhases[robotPhase].code}</strong>
+                <div className="workflow-controls" aria-label="Explore workflow steps">
+                  {robotPhases.map((phase, index) => (
+                    <button key={phase.code} type="button" aria-pressed={robotPhase === index}
+                      onClick={() => { robotPinned.current = true; setRobotPhase(index); }}>{phase.label}</button>
+                  ))}
                 </div>
+                <p className="workflow-detail">{robotPhases[robotPhase].detail}</p>
+                <p className="figure-note">Illustrative automated workflow</p>
               </div>
-              <p className="data-readout">Automated batching / 3 runs weekly</p>
             </article>
           </div>
         </section>
 
         <section id="vision" className="vision-section">
-          <div className="vision-grid" />
-          <div className="vision-content">
-            <div className="vision-layout">
-              <p className="vision-large" aria-label={manifesto}>
-                {manifestoWords.map((word, index) => {
-                  const normalized = word.replace(/[^a-z]/gi, "").toLowerCase();
-                  const highlighted = normalized === "signal" || normalized === "complex";
-
-                  return (
-                    <span className="vision-word-mask" aria-hidden="true" key={`${word}-${index}`}>
-                      <span
-                        className={`vision-word ${highlighted ? "highlight" : ""}`}
-                        data-vision-word
-                      >
-                        {word}
-                      </span>
-                    </span>
-                  );
-                })}
-              </p>
-            </div>
-            <div className="vision-status" data-reveal="line">
-              <span>Signal integrity</span>
-              <span className="status-line"><i /></span>
-              <span>Scale ready</span>
-            </div>
+          <div className="vision-grid" aria-hidden="true" />
+          <div className="page-width vision-content">
+            <p className="eyebrow light">02 / The approach</p>
+            <h2 className="vision-manifesto" aria-label={manifesto}>
+              {manifesto.split(" ").map((word, index) => (
+                <span key={index} data-vision-word aria-hidden="true" className={/signal|complex/.test(word) ? "highlight" : ""}>{word}{" "}</span>
+              ))}
+            </h2>
           </div>
         </section>
 
         <section id="people" className="people-section section-pad">
           <div className="page-width">
-            <div className="split-heading" data-reveal="heading">
-              <div>
-                <p className="eyebrow">People</p>
-                <h2>The lab behind the platform.</h2>
-              </div>
-              <p>
-                A live roster of scientists, engineers, and computational
-                builders shaping the lab's next wave of genomic, multiomic, and
-                automated technologies.
-              </p>
+            <div className="section-heading split-heading" data-reveal>
+              <div><p className="eyebrow">03 / People</p><h2>Building<br />the team.</h2></div>
+              <p>The Technology Innovation Lab is a vision in development. These cards introduce Ivan and the expertise envisioned for a future team.</p>
             </div>
-
+            <p className="team-stage-note"><strong>A team to build.</strong> The four future roles describe a possible team structure, not current members or advertised positions.</p>
             <div className="people-layout">
-              <article className="person-feature" key={person.name}>
+              <article className="person-feature" id="person-profile" aria-label={person.name} key={person.name}>
                 <div className="portrait-frame">
-                  {person.photo ? (
-                    <img src={person.photo} alt={person.name} />
-                  ) : (
-                    <div className="portrait-placeholder">{person.initials}</div>
-                  )}
-                  <div className="portrait-status">
-                    <span>Live profile</span>
-                    <span><i /> Active</span>
-                  </div>
+                  {person.photo ? <img src={person.photo} alt={person.name} loading="lazy" width="600" height="750" /> : <div className="future-role-portrait" aria-hidden="true"><LabLogo className="future-role-mark" /><div><span>A future direction</span><strong>{person.visualTitle}</strong><p>A role to shape,<br />together.</p></div></div>}
+                  <div className="portrait-status"><span>{person.future ? "Future team" : "Ivan’s profile"}</span><span>{person.future ? "Vision in development" : "Research & invention"}</span></div>
                 </div>
                 <div className="person-copy">
                   <div>
-                    <div className="person-index">
-                      <span>{String(activePerson + 1).padStart(2, "0")}</span>
-                      <i />
-                      <span>{person.role}</span>
-                    </div>
-                    <h3>{person.name}</h3>
+                    <div className="person-index"><span>{String(activePerson + 1).padStart(2, "0")}</span><i aria-hidden="true" /><span>{person.role}</span></div>
+                    <h3>{person.name.replace(", PhD", "")}<span>{person.name.includes("PhD") ? "PhD" : ""}</span></h3>
                     <p className="person-summary">{person.summary}</p>
                   </div>
                   <div>
                     <dl className="person-details">
-                      <div><dt>Specialty</dt><dd>{person.specialty}</dd></div>
-                      <div><dt>Current focus</dt><dd>{person.focus}</dd></div>
-                      <div><dt>Operating mode</dt><dd>{person.mode}</dd></div>
+                      <div><dt>{person.future ? "Research area" : "Specialty"}</dt><dd>{person.specialty}</dd></div>
+                      <div><dt>{person.future ? "Potential focus" : "Current focus"}</dt><dd>{person.focus}</dd></div>
+                      <div><dt>Research approach</dt><dd>{person.mode}</dd></div>
                     </dl>
-                    <div className="signal-tags">
-                      {person.signals.map((signal) => <span key={signal}>{signal}</span>)}
-                    </div>
+                    <div className="signal-tags">{person.signals.map((signal) => <span key={signal}>{signal}</span>)}</div>
+                    <button className="text-link" type="button" onClick={openContact}>{person.future ? "Introduce yourself" : "Get in touch"} <Arrow /></button>
                   </div>
                 </div>
               </article>
-
-              <div className="people-list" role="tablist" aria-label="Lab members" data-reveal="right">
+              {people.length > 1 && <div className="people-list" aria-label="Ivan and future team roles">
                 {people.map((member, index) => (
-                  <button
-                    key={member.name}
-                    type="button"
-                    role="tab"
-                    aria-selected={activePerson === index}
+                  <button key={member.name} type="button" aria-pressed={activePerson === index} aria-controls="person-profile"
                     className={activePerson === index ? "active" : ""}
-                    onMouseEnter={() => setActivePerson(index)}
-                    onFocus={() => setActivePerson(index)}
-                    onClick={() => setActivePerson(index)}
-                  >
-                    <span>
-                      <small className="member-index">
-                        {String(index + 1).padStart(2, "0")} / Profile
-                      </small>
-                      <strong>{member.name}</strong>
-                      <small>{member.role}</small>
-                    </span>
-                    <Arrow />
+                    onPointerEnter={(event) => {
+                      cancelPersonPreview();
+                      if (event.pointerType === "mouse" && window.matchMedia("(hover: hover)").matches) {
+                        personHoverTimer.current = setTimeout(() => setActivePerson(index), 160);
+                      }
+                    }}
+                    onPointerLeave={cancelPersonPreview} onFocus={() => selectPerson(index)} onClick={() => selectPerson(index)}>
+                    <span><strong>{member.name}</strong><small>{member.role}</small></span>
                   </button>
                 ))}
-              </div>
+              </div>}
             </div>
           </div>
         </section>
 
         <section id="papers" className="papers-section section-pad">
           <div className="page-width">
-            <div className="section-heading papers-heading" data-reveal="heading">
-              <div>
-                <p className="eyebrow">Selected Publications</p>
-                <h2>Recent work published from the lab.</h2>
-              </div>
-              <div className="papers-register" aria-label="Publication archive summary">
-                <span>Research archive</span>
-                <strong>03 records</strong>
-                <small>2023—2026</small>
-              </div>
+            <div className="section-heading papers-heading" data-reveal>
+              <div><p className="eyebrow">04 / Selected publications</p><h2>Ideas, put<br /><em>into practice.</em></h2></div>
+              <p>Selected research<br />and methods.</p>
             </div>
             <div className="paper-list">
-              {papers.map((paper) => (
-                <article className="paper-row" key={paper.number} data-reveal="paper">
-                  <div className="paper-register">
-                    <span className="paper-number">{paper.number}</span>
-                    <small>{paper.year}</small>
-                  </div>
+              {papers.map((paper, index) => (
+                <article className={`paper-row ${index === 0 ? "paper-featured" : ""}`} key={paper.number}
+                  id={index === 0 ? "paper-dd-seq" : undefined} data-reveal>
+                  <div className="paper-register"><span className="paper-number">{paper.coverCode}</span><span>{paper.year}</span></div>
                   <div className="paper-copy">
-                    <div className="paper-meta">
-                      <span>{paper.category}</span>
-                      <span>{paper.journal}</span>
-                    </div>
-                    <h3>{paper.title}</h3>
+                    <p className="paper-meta">{paper.journal}</p>
+                    <h3><a href={paper.href} target="_blank" rel="noreferrer">{paper.title}</a></h3>
                     <p>{paper.copy}</p>
-                    <a href={paper.href} target="_blank" rel="noreferrer">
-                      {paper.label} <Arrow />
-                    </a>
+                    <a className="text-link" href={paper.href} target="_blank" rel="noreferrer">{paper.label.replace(" / ", " · ")} <Arrow /></a>
                   </div>
-                  <PublicationCover
-                    kind={paper.cover}
-                    code={paper.coverCode}
-                    title={paper.coverTitle}
-                    issue={paper.issue}
-                    doi={paper.doi}
-                    image={paper.coverImage}
-                    alt={paper.coverAlt}
-                  />
+                  <a className="cover-link" href={paper.href} target="_blank" rel="noreferrer" aria-label={`Read ${paper.title}`}>
+                    <PublicationCover kind={paper.cover} code={paper.coverCode} title={paper.coverTitle} issue={paper.issue}
+                      doi={paper.doi} image={paper.coverImage} alt={paper.coverAlt} />
+                  </a>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="join" className="join-section">
-          <div className="join-noise" />
+        <section id="join" className="join-section section-pad">
           <div className="page-width join-content">
-            <div className="join-intro" data-reveal="left">
-              <p className="eyebrow light">Join the Lab</p>
-              <h2>
-                Build the next generation
-                <span>of biological measurement.</span>
-              </h2>
-              <p>
-                We are recruiting PhD students and postdoctoral researchers who
-                want to invent assays, integrate automation, and turn complex
-                genomics into tools that shift what can be measured.
-              </p>
-              <button className="button button-accent" type="button" onClick={() => setContactOpen(true)}>
-                Contact the Lab <Arrow />
-              </button>
+            <div className="join-intro" data-reveal>
+              <p className="eyebrow light">05 / Let’s connect</p>
+              <h2>What would you<br /><em>make possible?</em></h2>
+              <p>Interested in the research direction? Contact me to exchange ideas, discuss a possible collaboration, or stay in touch as plans for the lab develop.</p>
+              <p className="join-status-note">No positions are currently advertised. Expressions of interest are welcome.</p>
+              <button className="button button-light" type="button" onClick={openContact}>Let’s start a conversation <Arrow /></button>
             </div>
-            <div className="track-list" data-reveal="right">
-              {tracks.map((track, index) => (
+            <div className="track-list">
+              {tracks.map((track) => (
                 <article key={track.label}>
-                  <div className="track-meta">
-                    <span>{String(index + 1).padStart(2, "0")}</span>
-                    <span>{track.status}</span>
-                    <span>{track.count}</span>
-                  </div>
-                  <h3>{track.label}</h3>
-                  <p>{track.title}</p>
+                  <h3>{track.label}</h3><p>{track.title}</p>
                 </article>
               ))}
             </div>
@@ -886,56 +660,33 @@ export default function Home() {
         </section>
       </main>
 
-      <footer id="footer" className="site-footer">
+      <footer className="site-footer">
         <div className="page-width footer-grid">
           <div>
-            <p className="footer-brand">Technology Innovation Lab <span>@ SCB</span></p>
-            <p className="footer-purpose">
-              A precision system for single-cell multiomics, inventive genomics,
-              and robotic workflows.
-            </p>
+            <a className="footer-brand" href="#home">
+              <LabLogo className="footer-brand-mark" />
+              <span className="footer-brand-copy">Technology<br />Innovation Lab <span className="footer-brand-affiliation">A lab in the making</span></span>
+            </a>
+            <p className="footer-purpose">Ivan Raimondi’s research and vision for a future lab.</p>
           </div>
-          <div>
-            <p className="footer-label">Navigation</p>
-            <a href="#artifacts">Core Platforms</a>
-            <a href="#people">People Roster</a>
-            <a href="#papers">Publication Stack</a>
-          </div>
-          <div>
-            <p className="footer-label">Contact</p>
-            <a href="mailto:ivr4003@med.cornell.edu">ivr4003@med.cornell.edu</a>
-            <p>New York, NY</p>
-          </div>
+          <div><p className="footer-label">Explore</p><a href="#artifacts">Research</a><a href="#people">People</a><a href="#papers">Publications</a><a href="#join">Get in touch</a></div>
+          <div><p className="footer-label">Say hello</p><a href={`mailto:${email}`}>{email}</a><p>Ivan Raimondi<br />Weill Cornell Medicine<br />New York, NY</p></div>
         </div>
-        <div className="page-width footer-bottom">
-          <span><i /> System operational</span>
-          <span>SCB / Weill Cornell Medicine / 2026</span>
-        </div>
+        <div className="page-width footer-bottom"><span>Ivan Raimondi · Technology Innovation Lab</span><a href="#home">Back to top ↑</a></div>
       </footer>
 
-      {contactOpen && (
-        <div className="modal-backdrop" role="presentation" onMouseDown={() => setContactOpen(false)}>
-          <section
-            className="contact-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="contact-title"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            <button className="modal-close" type="button" onClick={() => setContactOpen(false)} aria-label="Close contact panel">
-              <span />
-              <span />
-            </button>
-            <p className="eyebrow">Contact Channel</p>
-            <h2 id="contact-title">Direct line open.</h2>
-            <p>For PhD, postdoctoral, and visiting applications, this is the fastest way into the lab.</p>
-            <button className="copy-email" type="button" onClick={copyEmail}>
-              <span>ivr4003@med.cornell.edu</span>
-              <strong>{copied ? "Copied" : "Copy email"}</strong>
-            </button>
-          </section>
+      <dialog ref={dialogRef} className="contact-modal" aria-labelledby="contact-title" aria-describedby="contact-description"
+        onCancel={() => setContactOpen(false)} onClose={() => setContactOpen(false)}>
+        <div className="contact-inner">
+          <button className="modal-close" type="button" onClick={() => setContactOpen(false)} aria-label="Close contact panel">×</button>
+          <p className="eyebrow">Get in touch</p><h2 id="contact-title">Good science starts<br />with a conversation.</h2>
+          <p id="contact-description">For questions about my research, possible collaborations, or the future lab, get in touch. Expressions of interest are welcome; no positions are currently advertised.</p>
+          <a className="contact-address" href={`mailto:${email}`}>{email}</a>
+          <div className="contact-actions"><a className="button button-dark" href={`mailto:${email}`}>Email Ivan <Arrow /></a>
+            <button className="text-link" type="button" onClick={copyEmail}>Copy email</button></div>
+          <p className="copy-status" role="status">{copyStatus}</p>
         </div>
-      )}
+      </dialog>
     </div>
   );
 }

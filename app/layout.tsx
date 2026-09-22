@@ -14,13 +14,16 @@ export async function generateMetadata(): Promise<Metadata> {
       ? "http"
       : "https");
   const origin = `${protocol}://${host}`;
-  const title = "Technology Innovation Lab @ SCB";
+  const title = "Ivan Raimondi | Technology Innovation Lab";
   const description =
-    "Inventing genomic, multiomic, and automated technologies for higher-resolution biological discovery.";
+    "Ivan Raimondi’s research in genomic and multiomic methods, and his vision for a future Technology Innovation Lab.";
 
   return {
     title,
     description,
+    icons: {
+      icon: { url: "/favicon.svg?v=til-soft-a", type: "image/svg+xml" },
+    },
     openGraph: {
       title,
       description,
