@@ -67,7 +67,8 @@ server and existing `dist/` build are preserved.
 ## News and Blog
 
 The homepage links to `/news/` and `/blog/` and previews the latest published
-entries. Both collections start empty; no example posts appear on the site.
+entries. Collections without published content show an honest empty state;
+no example posts appear on the site.
 See [the content authoring guide](docs/content-authoring.md) to add approved
 entries, including article bodies, dates, summaries, and draft status.
 

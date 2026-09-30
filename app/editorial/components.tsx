@@ -15,6 +15,20 @@ function Arrow() {
   return <span aria-hidden="true" className="arrow-icon" />;
 }
 
+function EditorialPhoto({ image, loading = "lazy" }: {
+  image: NonNullable<EditorialEntry["image"]>;
+  loading?: "eager" | "lazy";
+}) {
+  return (
+    <div className="editorial-image-circle">
+      {/* A plain image preserves the original full-width composition in static exports. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={assetPath(image.src)} alt={image.alt} width={image.width} height={image.height}
+        loading={loading} decoding="async" />
+    </div>
+  );
+}
+
 export function EditorialEmptyState({ kind }: { kind: EditorialKind }) {
   const collection = editorialCollections[kind];
   return (
@@ -28,18 +42,21 @@ export function EditorialEmptyState({ kind }: { kind: EditorialKind }) {
 
 export function EditorialCard({ kind, entry }: { kind: EditorialKind; entry: EditorialEntry }) {
   return (
-    <article className="editorial-card">
-      <p className="editorial-card-meta">
-        <time dateTime={entry.date}>{formatEditorialDate(entry.date)}</time>
-        {entry.author && <span>{entry.author}</span>}
-      </p>
-      <h3 className="editorial-card-title">
-        <a href={editorialPath(kind, entry.slug)}>{entry.title}</a>
-      </h3>
-      <p className="editorial-card-summary">{entry.summary}</p>
-      <a className="editorial-card-link" href={editorialPath(kind, entry.slug)} aria-label={`Read ${entry.title}`}>
-        Read {kind === "news" ? "update" : "post"} <Arrow />
-      </a>
+    <article className={`editorial-card${entry.image ? " editorial-card-with-image" : ""}`}>
+      <div className="editorial-card-copy">
+        <p className="editorial-card-meta">
+          <time dateTime={entry.date}>{formatEditorialDate(entry.date)}</time>
+          {entry.author && <span>{entry.author}</span>}
+        </p>
+        <h3 className="editorial-card-title">
+          <a href={editorialPath(kind, entry.slug)}>{entry.title}</a>
+        </h3>
+        <p className="editorial-card-summary">{entry.summary}</p>
+        <a className="editorial-card-link" href={editorialPath(kind, entry.slug)} aria-label={`Read ${entry.title}`}>
+          Read {kind === "news" ? "update" : "post"} <Arrow />
+        </a>
+      </div>
+      {entry.image && <EditorialPhoto image={entry.image} />}
     </article>
   );
 }
@@ -111,6 +128,7 @@ export function EditorialArticle({ kind, entry }: { kind: EditorialKind; entry: 
           {entry.author && <span>By {entry.author}</span>}
         </p>
       </header>
+      {entry.image && <figure className="editorial-article-photo"><EditorialPhoto image={entry.image} loading="eager" /></figure>}
       <div className="editorial-body">
         {entry.body.map((block, index) => <BodyBlock key={index} block={block} />)}
       </div>

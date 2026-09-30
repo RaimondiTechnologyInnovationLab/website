@@ -1,8 +1,8 @@
 # News and Blog authoring
 
 News holds announcements, publications, and milestones. Blog holds longer notes
-about science, technology, and methods. Both are initially empty: the website
-shows honest empty states until approved material is ready to publish.
+about science, technology, and methods. The website shows honest empty states
+for any collection without approved published material.
 
 ## Add an entry
 
@@ -48,6 +48,13 @@ Do not commit confidential, embargoed, or unapproved material.
 - `status`: `"draft"` or `"published"`. There is no date-based scheduling: marking
   a future-dated entry published includes it in the next build immediately.
 - `author`: optional approved name. Omit it rather than guessing authorship.
+- `image`: optional approved local photo, with `src`, descriptive `alt`, and
+  original pixel `width` and `height`. Place the raster asset in
+  `public/news-images/`; use a lowercase hyphenated filename and PNG, JPG, JPEG,
+  or WebP format. Paths in content begin with `/news-images/`, without
+  `/website`. Images are displayed through a circular CSS mask on cards and
+  article pages. Preserve the scene and keep the speaker small; do not zoom or
+  retouch. Use lossless web encoding when optimizing an original photo.
 - `body`: one or more structured blocks:
   - `{ type: "paragraph", text: "..." }`
   - `{ type: "heading", text: "..." }` for a second-level section heading
@@ -60,7 +67,8 @@ use HTTPS or begin with a single `/` for a path on this website, such as
 `/news/approved-slug/` or `/#artifacts`. Do not add `/website` to internal content
 links; the renderer applies the deployment prefix. Protocol-relative links,
 credentials in links, script URLs, whitespace, and backslashes are rejected.
-There is no arbitrary HTML, embedded script, remote embed, or image block.
+There is no arbitrary HTML, embedded script, remote embed, or inline image block.
+Use the entry's optional `image` field for the approved lead photo.
 
 ## Pages and preview behavior
 

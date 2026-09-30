@@ -36,6 +36,13 @@ const entry = (overrides = {}) => ({
   body: [{ type: "paragraph", text: "Approved public body text." }],
   ...overrides,
 });
+const image = (overrides = {}) => ({
+  src: "/news-images/approved-update.webp",
+  alt: "A speaker presenting research at a symposium",
+  width: 1536,
+  height: 2048,
+  ...overrides,
+});
 
 function freeze(value) {
   if (value && typeof value === "object") {
@@ -127,6 +134,61 @@ test("valid date, optional author and all supported plain-text block types are a
       { type: "link", text: "Back to news", href: "/news/" },
     ],
   })]));
+});
+
+test("editorial images are optional and accept supported local formats and dimension limits", () => {
+  assert.doesNotThrow(() => content.validateEditorialEntries([entry()]));
+  assert.doesNotThrow(() => content.validateEditorialEntries([entry({ image: undefined })]));
+  for (const extension of ["png", "jpg", "jpeg", "webp"]) {
+    for (const dimensions of [{ width: 1, height: 10000 }, { width: 10000, height: 1 }]) {
+      const illustrated = freeze(entry({ image: image({ src: `/news-images/photo-2026.${extension}`, ...dimensions }) }));
+      const before = JSON.stringify(illustrated);
+      assert.doesNotThrow(() => content.validateEditorialEntries([illustrated]));
+      assert.deepEqual(content.selectPublishedEntries([illustrated]), [illustrated]);
+      assert.equal(JSON.stringify(illustrated), before, "Image validation must not mutate authoring content");
+    }
+  }
+});
+
+for (const src of [
+  "", " ", undefined, null, 123,
+  "https://example.org/photo.webp", "//example.org/photo.webp", "data:image/png;base64,AAAA",
+  "news-images/photo.webp", "/website/news-images/photo.webp", "/images/photo.webp",
+  "/news-images/../photo.webp", "/news-images/nested/photo.webp", "/news-images/%2e%2e/photo.webp",
+  "/news-images/Photo.webp", "/news-images/photo.WEBP", "/news-images/photo_name.webp",
+  "/news-images/photo name.webp", "/news-images/café.webp", "/news-images/.webp",
+  "/news-images/photo.svg", "/news-images/photo.gif", "/news-images/photo.webp?size=400",
+  "/news-images/photo.webp#fragment", "/news-images/photo.webp\n", "/news-images/photo\\name.webp",
+]) {
+  test(`invalid editorial image source is rejected: ${JSON.stringify(src)}`, () => {
+    assert.throws(() => content.validateEditorialEntries([entry({ image: image({ src }) })]), /Editorial content:.*image/s);
+  });
+}
+
+for (const value of [null, "photo.webp", [], {}]) {
+  test(`invalid editorial image object is rejected: ${JSON.stringify(value)}`, () => {
+    assert.throws(() => content.validateEditorialEntries([entry({ image: value })]), /Editorial content:.*image/s);
+  });
+}
+
+for (const alt of [undefined, null, "", " \n\t ", 123]) {
+  test(`invalid editorial image alternative text is rejected: ${JSON.stringify(alt)}`, () => {
+    assert.throws(() => content.validateEditorialEntries([entry({ image: image({ alt }) })]), /Editorial content:.*image/s);
+  });
+}
+
+for (const dimension of ["width", "height"]) {
+  for (const value of [undefined, null, 0, -1, 1.5, 10001, Number.NaN, Number.POSITIVE_INFINITY, "1536", true]) {
+    test(`invalid editorial image ${dimension} is rejected: ${String(value)}`, () => {
+      assert.throws(() => content.validateEditorialEntries([entry({ image: image({ [dimension]: value }) })]), /Editorial content:.*image/s);
+    });
+  }
+}
+
+test("draft images receive the same validation before published entries are selected", () => {
+  assert.throws(() => content.selectPublishedEntries([
+    entry({ status: "draft", image: image({ src: "https://example.org/private-photo.webp" }) }),
+  ]), /Editorial content:.*image/s);
 });
 
 for (const slug of ["", "Capitalized", "has spaces", "has_underscores", "-leading", "trailing-", "two--hyphens", "../escape", "a/b", "a?b", "a#b", "%2F", "café"]) {

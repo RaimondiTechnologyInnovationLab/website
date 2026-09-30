@@ -22,6 +22,13 @@ export interface EditorialEntry {
   readonly summary: string;
   readonly status: "draft" | "published";
   readonly author?: string;
+  /** Approved local photo. Rendering masks the full-width composition in a circle. */
+  readonly image?: {
+    readonly src: string;
+    readonly alt: string;
+    readonly width: number;
+    readonly height: number;
+  };
   readonly body: readonly EditorialBlock[];
 }
 
@@ -31,7 +38,26 @@ export interface EditorialEntry {
  * outside these entry arrays. Drafts are filtered before routes or UI receive data.
  * A public repository is not a private place to store unpublished material.
  */
-const newsEntries: readonly EditorialEntry[] = [];
+const newsEntries: readonly EditorialEntry[] = [
+  {
+    slug: "roswell-park-genomics-epigenomics-symposium-2026",
+    title: "Ivan Raimondi speaks at Roswell Park",
+    date: "2026-09-30",
+    summary: "6th Translational Genomics & Epigenomics Symposium · Buffalo, NY",
+    status: "published",
+    image: {
+      src: "/news-images/roswell-park-symposium-2026.webp",
+      alt: "Ivan Raimondi speaking at the Roswell Park lectern beside a projected scientific slide.",
+      width: 1536,
+      height: 2048,
+    },
+    body: [
+      { type: "paragraph", text: "Ivan Raimondi was an invited speaker at the 6th Translational Genomics & Epigenomics Symposium, held at Roswell Park Comprehensive Cancer Center in Buffalo on September 24–25, 2026." },
+      { type: "paragraph", text: "The symposium brought together researchers working on genomic and epigenomic technologies and their applications to cancer and other chronic diseases." },
+      { type: "link", text: "About the symposium", href: "https://www.roswellparkomicssymposium.org/" },
+    ],
+  },
+];
 const blogEntries: readonly EditorialEntry[] = [];
 
 export const editorialCollections = {
@@ -119,6 +145,19 @@ export function validateEditorialEntries(entries: readonly EditorialEntry[]): vo
     requireText(entry.title, `${entry.slug}.title`);
     requireText(entry.summary, `${entry.slug}.summary`);
     if (entry.author !== undefined) requireText(entry.author, `${entry.slug}.author`);
+    if (entry.image !== undefined) {
+      const image = entry.image;
+      if (!image || typeof image !== "object" || typeof image.src !== "string" || /\s/.test(image.src) ||
+        !/^\/news-images\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|jpe?g|webp)$/.test(image.src)) {
+        throw new Error(`Editorial content: ${entry.slug}.image.src must be a local raster photo in /news-images/.`);
+      }
+      requireText(image.alt, `${entry.slug}.image.alt`);
+      for (const field of ["width", "height"] as const) {
+        if (!Number.isInteger(image[field]) || image[field] < 1 || image[field] > 10000) {
+          throw new Error(`Editorial content: ${entry.slug}.image.${field} must be a positive integer up to 10000.`);
+        }
+      }
+    }
     const timestamp = Date.parse(`${entry.date}T00:00:00.000Z`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date) || !Number.isFinite(timestamp) ||
       new Date(timestamp).toISOString().slice(0, 10) !== entry.date) {

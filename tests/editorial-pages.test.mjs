@@ -9,6 +9,9 @@ const routes = [
   { file: "news/index.html", path: "news/", heading: "News" },
   { file: "blog/index.html", path: "blog/", heading: "Blog" },
 ];
+const roswellPath = "news/roswell-park-genomics-epigenomics-symposium-2026/";
+const roswellPhotoPath = "news-images/roswell-park-symposium-2026.webp";
+const roswellPhotoSource = `/website/${roswellPhotoPath}`;
 
 function decode(value) {
   return value.replace(/&(?:amp|quot|apos|lt|gt|#39|#(\d+)|#x([\da-f]+));/gi, (entity, decimal, hex) => {
@@ -20,7 +23,7 @@ function decode(value) {
 
 function attributes(tag) {
   return Object.fromEntries([...tag.matchAll(/([\w:-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)]
-    .map(([, name, doubleQuoted, singleQuoted]) => [name, decode(doubleQuoted ?? singleQuoted)]));
+    .map(([, name, doubleQuoted, singleQuoted]) => [name.toLowerCase(), decode(doubleQuoted ?? singleQuoted)]));
 }
 
 function markup(html) {
@@ -36,6 +39,20 @@ function textContent(html) {
 function values(html, key) {
   return [...markup(html).matchAll(/<meta\b[^>]*>/gi)].map(([tag]) => attributes(tag))
     .filter((tag) => tag.name === key || tag.property === key).map((tag) => tag.content);
+}
+
+function assertRoswellPhoto(html, label) {
+  const circles = [...markup(html).matchAll(/<([a-z][\w:-]*)\b[^>]*\bclass="[^"]*\beditorial-image-circle\b[^"]*"[^>]*>([\s\S]*?)<\/\1>/gi)];
+  assert.equal(circles.length, 1, `Expected one circular photo: ${label}`);
+  const photos = [...circles[0][2].matchAll(/<img\b[^>]*>/gi)].map(([tag]) => attributes(tag));
+  assert.equal(photos.length, 1, `Expected one image inside the circle: ${label}`);
+  const [photo] = photos;
+  assert.equal(photo.src, roswellPhotoSource, label);
+  assert.equal(photo.width, "1536", label);
+  assert.equal(photo.height, "2048", label);
+  assert.ok(photo.alt?.trim(), `The symposium photo needs alternative text: ${label}`);
+  assert.doesNotMatch(photo.style ?? "", /(?:transform\s*:[^;]*scale|(?:^|;)\s*scale\s*:)/i,
+    `The photograph must not receive an inline zoom: ${label}`);
 }
 
 const documents = await Promise.all(routes.map(async (route) => ({
@@ -165,6 +182,92 @@ test("archives render article cards or honest empty states without leaking autho
       }
     }
   }
+});
+
+test("the published Roswell Park article has its approved date, photo and official symposium link", async () => {
+  const html = await readFile(new URL(`${roswellPath}index.html`, output), "utf8");
+  const dom = markup(html);
+  assert.match(dom, /<!doctype html>/i);
+  const headings = [...dom.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)];
+  assert.equal(headings.length, 1);
+  assert.match(textContent(headings[0][1]), /Roswell Park/);
+  assert.match(textContent(dom.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] ?? ""), /Roswell Park.*Technology Innovation Lab/);
+  const publicationDates = [...dom.matchAll(/<time\b[^>]*>/gi)].map(([tag]) => attributes(tag).datetime);
+  assert.deepEqual(publicationDates, ["2026-09-30"]);
+  assert.match(textContent(dom), /30 September 2026/);
+  assert.deepEqual(values(html, "article:published_time"), ["2026-09-30T00:00:00.000Z"]);
+  const canonical = [...dom.matchAll(/<link\b[^>]*>/gi)].map(([tag]) => attributes(tag))
+    .filter((tag) => tag.rel === "canonical").map((tag) => tag.href);
+  assert.deepEqual(canonical, [new URL(roswellPath, base).href]);
+  const body = dom.match(/<div\b[^>]*\bclass="[^"]*\beditorial-body\b[^"]*"[^>]*>([\s\S]*?)<\/div>/i)?.[1];
+  assert.ok(body, "Expected the published article body");
+  assert.ok([...body.matchAll(/<a\b[^>]*>/gi)].some(([tag]) => attributes(tag).href === "https://www.roswellparkomicssymposium.org/"),
+    "Article must link to the official symposium website");
+  assertRoswellPhoto(dom, "Roswell Park article");
+});
+
+test("home and News cards show the Roswell Park article and its circular photograph", () => {
+  for (const page of documents.filter((page) => page.path === "" || page.path === "news/")) {
+    const card = [...markup(page.html).matchAll(/<article\b[^>]*\bclass="[^"]*\beditorial-card\b[^"]*"[^>]*>([\s\S]*?)<\/article>/gi)]
+      .map((match) => match[1]).find((html) => [...html.matchAll(/<a\b[^>]*>/gi)]
+        .some(([tag]) => attributes(tag).href === `/website/${roswellPath}`));
+    assert.ok(card, `The first published News article must be discoverable: ${page.file}`);
+    assert.match(textContent(card), /Roswell Park/);
+    assert.match(card, /<time\b[^>]*datetime="2026-09-30"/i);
+    assertRoswellPhoto(card, page.file);
+  }
+});
+
+test("circular editorial photos use centered cover cropping without a zoom transform", async () => {
+  const cssFiles = (await readdir(output, { recursive: true })).filter((file) => file.endsWith(".css"));
+  assert.ok(cssFiles.length, "Expected exported stylesheets");
+  const css = (await Promise.all(cssFiles.map((file) => readFile(new URL(file, output), "utf8")))).join("\n");
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].flatMap(([, selectors, body]) => selectors.split(",")
+    .map((selector) => ({ selector: selector.trim(), body, declarations: Object.fromEntries(body.split(";")
+      .filter((declaration) => declaration.includes(":"))
+      .map((declaration) => { const colon = declaration.indexOf(":"); return [declaration.slice(0, colon).trim(), declaration.slice(colon + 1).trim()]; })) })));
+  const declarationsFor = (selector) => Object.assign({}, ...rules.filter((rule) => rule.selector === selector).map((rule) => rule.declarations));
+  const circle = declarationsFor(".editorial-image-circle");
+  assert.equal(circle["border-radius"], "50%", "The image frame must be circular");
+  assert.match(circle["aspect-ratio"] ?? "", /^1(?:\s*\/\s*1)?$/, "The circle must retain a square aspect ratio");
+  const photo = declarationsFor(".editorial-image-circle img");
+  assert.equal(photo["object-fit"], "cover");
+  // The CSS minifier may reduce center center to center, 50%, or 50% 50%.
+  assert.match(photo["object-position"] ?? "", /^(?:center(?:\s+center)?|50%(?:\s+50%)?)$/,
+    "The crop must remain centered horizontally and vertically");
+  for (const rule of rules.filter((rule) => rule.selector.includes(".editorial-image-circle"))) {
+    assert.doesNotMatch(rule.declarations.transform ?? "", /(?:scale|matrix|perspective)\s*\(/i,
+      `Do not zoom the photograph: ${rule.selector}`);
+    if (rule.declarations.scale !== undefined) assert.match(rule.declarations.scale, /^(?:none|1(?:\s+1){0,2})$/,
+      `Do not zoom the photograph: ${rule.selector}`);
+  }
+});
+
+test("the exported symposium photo retains full dimensions and lossless WebP encoding", async () => {
+  const photo = await readFile(new URL(roswellPhotoPath, output));
+  assert.deepEqual(photo, await readFile(new URL(`../public/${roswellPhotoPath}`, import.meta.url)),
+    "The build must copy the approved photograph without re-encoding it");
+  assert.ok(photo.length >= 25, "Expected a complete WebP image");
+  assert.equal(photo.toString("ascii", 0, 4), "RIFF");
+  assert.equal(photo.toString("ascii", 8, 12), "WEBP");
+  assert.equal(photo.readUInt32LE(4) + 8, photo.length, "The image must contain a complete RIFF payload");
+  const chunks = [];
+  for (let offset = 12; offset < photo.length;) {
+    assert.ok(offset + 8 <= photo.length, "Truncated WebP chunk header");
+    const kind = photo.toString("ascii", offset, offset + 4);
+    const size = photo.readUInt32LE(offset + 4);
+    assert.ok(offset + 8 + size <= photo.length, `Truncated ${kind} chunk`);
+    chunks.push({ kind, payload: photo.subarray(offset + 8, offset + 8 + size) });
+    offset += 8 + size + (size % 2);
+  }
+  assert.ok(!chunks.some(({ kind }) => ["VP8 ", "ANIM", "ANMF"].includes(kind)), "Use a still, lossless WebP photograph");
+  const lossless = chunks.filter(({ kind }) => kind === "VP8L");
+  assert.equal(lossless.length, 1, "Expected one lossless VP8L image payload");
+  assert.ok(lossless[0].payload.length >= 5);
+  assert.equal(lossless[0].payload[0], 0x2f, "Expected a valid lossless WebP signature");
+  const dimensions = lossless[0].payload.readUInt32LE(1);
+  assert.equal((dimensions & 0x3fff) + 1, 1536);
+  assert.equal(((dimensions >>> 14) & 0x3fff) + 1, 2048);
 });
 
 test("authoring template text and synthetic draft markers are absent from shipped HTML, JS and RSC", async () => {
