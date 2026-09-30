@@ -231,6 +231,9 @@ test("each published blog illustration appears in its circular card and article"
     const article = markup(await readFile(new URL(`${href.replace(/^\/website\//, "")}index.html`, output), "utf8"));
     assert.ok(article.includes(`src="${img.src}"`), href);
     assert.match(article, /\beditorial-article-illustration\b/);
+    const header = article.match(/<header\b[^>]*class="editorial-article-header"[^>]*>([\s\S]*?)<\/header>/i)?.[1];
+    assert.ok(header?.includes(`src="${img.src}"`), "Blog artwork belongs beside the title, inside the article header");
+    assert.equal([...article.matchAll(/class="editorial-image-circle"/g)].length, 1, "The article must not duplicate its illustration below the header");
     if (index < 3) assert.ok(markup(documents[0].html).includes(`src="${img.src}"`), "The latest blog image belongs on the homepage too");
     const asset = await readFile(new URL(img.src.replace(/^\/website\//, ""), output));
     assert.ok(asset.length < 150_000, "Keep blog thumbnail assets small");

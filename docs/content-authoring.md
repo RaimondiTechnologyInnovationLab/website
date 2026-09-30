@@ -87,7 +87,8 @@ Use `public/blog-images/before-we-trust-spatial-ai.svg` as the first visual refe
   `#7b342e` and a pale red tint can distinguish compartments.
 - Prefer a hand-authored SVG for geometric concepts. Use a square 600 × 600 canvas,
   center the subject in a circle-safe area, and inspect it at the actual 180px card
-  size. The article illustration is capped at 360px. Avoid tiny text, gradients,
+  size. In articles it sits beside the title at 180px, or above the title at 128px
+  on narrow screens so it is visible immediately. Avoid tiny text, gradients,
   glossy 3D, stock DNA/brain motifs, circuitry, glows and decorative complexity.
 - SVGs must be self-contained static shapes: no scripts, event handlers, external
   references, embedded images, fonts or animation. Provide a meaningful `title`

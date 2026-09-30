@@ -116,19 +116,25 @@ function BodyBlock({ block }: { block: EditorialBlock }) {
 }
 
 export function EditorialArticle({ kind, entry }: { kind: EditorialKind; entry: EditorialEntry }) {
+  const hasBlogIllustration = kind === "blog" && Boolean(entry.image);
   return (
     <article className="editorial-article page-width">
       <header className="editorial-article-header">
         <a className="editorial-back-link" href={editorialPath(kind)}>Back to {editorialCollections[kind].title}</a>
-        <p className="editorial-kicker eyebrow">{editorialCollections[kind].entryLabel}</p>
-        <h1 className="editorial-article-title">{entry.title}</h1>
+        <div className={hasBlogIllustration ? "editorial-article-heading-with-art" : undefined}>
+          <div>
+            <p className="editorial-kicker eyebrow">{editorialCollections[kind].entryLabel}</p>
+            <h1 className="editorial-article-title">{entry.title}</h1>
+          </div>
+          {hasBlogIllustration && entry.image && <figure className="editorial-article-illustration"><EditorialImage image={entry.image} loading="eager" /></figure>}
+        </div>
         <p className="editorial-article-summary">{entry.summary}</p>
         <p className="editorial-article-meta">
           <time dateTime={entry.date}>{formatEditorialDate(entry.date)}</time>
           {entry.author && <span>By {entry.author}</span>}
         </p>
       </header>
-      {entry.image && <figure className={`editorial-article-photo${kind === "blog" ? " editorial-article-illustration" : ""}`}><EditorialImage image={entry.image} loading="eager" /></figure>}
+      {kind === "news" && entry.image && <figure className="editorial-article-photo"><EditorialImage image={entry.image} loading="eager" /></figure>}
       <div className="editorial-body">
         {entry.body.map((block, index) => <BodyBlock key={index} block={block} />)}
       </div>
