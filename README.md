@@ -71,22 +71,22 @@ custom credential or paid hosting service is needed in the workflow.
 
 ## Link preview image
 
-Open Graph and Twitter use `public/og-til-cells-2026-09-30.png` (1200 × 630).
+Open Graph and Twitter use `public/og-til-cells-2026-09-30-v2.png` (1200 × 630).
 The matching SVG is the editable source. Its lettering is outlined from the
 hero's native Helvetica Neue and Iowan Old Style Italic fonts, so exporters
 cannot silently substitute another face. To edit the text or its typography,
 update the labels in `scripts/outline-social-type.swift`, then run on macOS:
 
 ```sh
-swift scripts/outline-social-type.swift public/og-til-cells-2026-09-30.svg
+swift scripts/outline-social-type.swift public/og-til-cells-2026-09-30-v2.svg
 ```
 
 Rasterize the resulting SVG at 1200 × 630 after visual changes; exporting the
 outlined SVG does not require those fonts to be installed. Keep the preview
 consistent with the hero when changing the site's branding. Use a new image
 filename in `app/layout.tsx` and `tests/static-pages.test.mjs` for a new design.
-Copy the same PNG to `public/og.png` and `public/og-til-cells-2026-09.png` for
-clients using the previous URLs.
+Copy the same PNG to `public/og.png`, `public/og-til-cells-2026-09.png`, and
+`public/og-til-cells-2026-09-30.png` for clients using the previous URLs.
 `npm run test:pages` checks the exported image, metadata, and legacy copy.
 Messaging apps may retain previews already cached for a shared page URL.
 

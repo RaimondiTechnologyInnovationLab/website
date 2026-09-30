@@ -1,4 +1,4 @@
-// Run on macOS: swift scripts/outline-social-type.swift public/og-til-cells-2026-09-30.svg
+// Run on macOS: swift scripts/outline-social-type.swift public/og-til-cells-2026-09-30-v2.svg
 // CoreText uses the same installed faces as the macOS hero. Outlines keep SVG
 // rasterizers from substituting a different italic when creating the PNG.
 import Foundation
@@ -19,10 +19,9 @@ let labels: [Label] = [
     .init(text: "Technology Innovation Lab", face: "HelveticaNeue-Bold", size: 23, tracking: -0.575, x: 155, y: 74, fill: "#f5f3ed"),
     .init(text: "A lab in the making", face: "HelveticaNeue-Bold", size: 16, tracking: 1.12, x: 155, y: 100, fill: "#f78c7c"),
     .init(text: "GENOMICS. MULTIOMICS. AUTOMATION.", face: "HelveticaNeue-Bold", size: 14, tracking: 1.96, x: 58, y: 185, fill: "#e2e5e6"),
-    .init(text: "Imagining what", face: "HelveticaNeue-Medium", size: 70, tracking: -3.5, x: 54, y: 270, fill: "#fff"),
-    .init(text: "biology needs", face: "HelveticaNeue-Medium", size: 70, tracking: -3.5, x: 54, y: 344, fill: "#fff"),
-    .init(text: "Next...", face: "IowanOldStyle-Italic", size: 167, tracking: -11.69, x: 48, y: 482, fill: "#f36b57"),
-    .init(text: "Building technologies to make the unseen measurable.", face: "HelveticaNeue", size: 23, tracking: 0, x: 58, y: 555, fill: "#e1e5e8"),
+    .init(text: "Imagining what biology needs", face: "HelveticaNeue-Medium", size: 70, tracking: -3.5, x: 54, y: 270, fill: "#fff"),
+    .init(text: "Next...", face: "IowanOldStyle-Italic", size: 167, tracking: -11.69, x: 48, y: 430, fill: "#f36b57"),
+    .init(text: "Building technologies to make the unseen measurable.", face: "HelveticaNeue", size: 23, tracking: 0, x: 58, y: 510, fill: "#e1e5e8"),
 ]
 
 func number(_ value: CGFloat) -> String {
