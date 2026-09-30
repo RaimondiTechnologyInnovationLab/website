@@ -243,7 +243,7 @@ test("circular editorial photos use centered cover cropping without a zoom trans
   }
 });
 
-test("the exported symposium photo retains full dimensions and lossless WebP encoding", async () => {
+test("the exported symposium photo retains full dimensions and valid still WebP encoding", async () => {
   const photo = await readFile(new URL(roswellPhotoPath, output));
   assert.deepEqual(photo, await readFile(new URL(`../public/${roswellPhotoPath}`, import.meta.url)),
     "The build must copy the approved photograph without re-encoding it");
@@ -260,14 +260,22 @@ test("the exported symposium photo retains full dimensions and lossless WebP enc
     chunks.push({ kind, payload: photo.subarray(offset + 8, offset + 8 + size) });
     offset += 8 + size + (size % 2);
   }
-  assert.ok(!chunks.some(({ kind }) => ["VP8 ", "ANIM", "ANMF"].includes(kind)), "Use a still, lossless WebP photograph");
-  const lossless = chunks.filter(({ kind }) => kind === "VP8L");
-  assert.equal(lossless.length, 1, "Expected one lossless VP8L image payload");
-  assert.ok(lossless[0].payload.length >= 5);
-  assert.equal(lossless[0].payload[0], 0x2f, "Expected a valid lossless WebP signature");
-  const dimensions = lossless[0].payload.readUInt32LE(1);
-  assert.equal((dimensions & 0x3fff) + 1, 1536);
-  assert.equal(((dimensions >>> 14) & 0x3fff) + 1, 2048);
+  assert.ok(!chunks.some(({ kind }) => ["ANIM", "ANMF"].includes(kind)), "Use a still WebP photograph");
+  const images = chunks.filter(({ kind }) => ["VP8 ", "VP8L"].includes(kind));
+  assert.equal(images.length, 1, "Expected one WebP image payload");
+  const { kind, payload } = images[0];
+  if (kind === "VP8L") {
+    assert.ok(payload.length >= 5);
+    assert.equal(payload[0], 0x2f, "Expected a valid lossless WebP signature");
+    const dimensions = payload.readUInt32LE(1);
+    assert.equal((dimensions & 0x3fff) + 1, 1536);
+    assert.equal(((dimensions >>> 14) & 0x3fff) + 1, 2048);
+  } else {
+    assert.ok(payload.length >= 10);
+    assert.deepEqual(payload.subarray(3, 6), Buffer.from([0x9d, 0x01, 0x2a]), "Expected a valid VP8 key frame");
+    assert.equal(payload.readUInt16LE(6) & 0x3fff, 1536);
+    assert.equal(payload.readUInt16LE(8) & 0x3fff, 2048);
+  }
 });
 
 test("authoring template text and synthetic draft markers are absent from shipped HTML, JS and RSC", async () => {

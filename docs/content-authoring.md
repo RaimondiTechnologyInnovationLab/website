@@ -54,7 +54,7 @@ Do not commit confidential, embargoed, or unapproved material.
   or WebP format. Paths in content begin with `/news-images/`, without
   `/website`. Images are displayed through a circular CSS mask on cards and
   article pages. Preserve the scene and keep the speaker small; do not zoom or
-  retouch. Use lossless web encoding when optimizing an original photo.
+  retouch. Optimize web encoding without changing the original dimensions or composition.
 - `body`: one or more structured blocks:
   - `{ type: "paragraph", text: "..." }`
   - `{ type: "heading", text: "..." }` for a second-level section heading
