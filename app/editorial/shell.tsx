@@ -42,7 +42,7 @@ export function EditorialHeader({ active }: { active: "news" | "blog" }) {
       <nav className="nav-shell" aria-label="Primary navigation">
         <a className="brand" href={assetPath("/")}>
           <LabLogo className="brand-mark" />
-          <span className="brand-copy"><span className="brand-name">Technology <span className="brand-name-tail">Innovation Lab</span></span><span className="brand-affiliation">A lab in the making</span></span>
+          <span className="brand-copy"><span className="brand-name">Technology <span className="brand-name-tail">Innovation Lab</span></span><span className="brand-affiliation">@SCB</span></span>
         </a>
         <div id="primary-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}>
           {links.map(([label, href]) => <a key={href} href={assetPath(href)} aria-current={label.toLowerCase() === active ? "page" : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
@@ -60,10 +60,10 @@ export function EditorialHeader({ active }: { active: "news" | "blog" }) {
 export function EditorialFooter() {
   return <footer className="site-footer">
     <div className="page-width footer-grid">
-      <div><a className="footer-brand" href={assetPath("/")}><LabLogo className="footer-brand-mark" /><span className="footer-brand-copy">Technology<br />Innovation Lab <span className="footer-brand-affiliation">A lab in the making</span></span></a></div>
+      <div><a className="footer-brand" href={assetPath("/")}><LabLogo className="footer-brand-mark" /><span className="footer-brand-copy">Technology<br />Innovation Lab <span className="footer-brand-affiliation">@SCB</span></span></a></div>
       <div><p className="footer-label">Explore</p>{links.filter(([label]) => label !== "Approach").map(([label, href]) => <a key={href} href={assetPath(href)}>{label}</a>)}<a href={assetPath("/#join")}>Get in touch</a></div>
       <div><p className="footer-label">Say hello</p><a href="mailto:ivr4003@med.cornell.edu">ivr4003@med.cornell.edu</a><p>Ivan Raimondi<br />Weill Cornell Medicine<br />New York, NY</p></div>
     </div>
-    <div className="page-width footer-bottom"><span>Ivan Raimondi · Technology Innovation Lab</span><a href={assetPath("/")}>Back to home <span aria-hidden="true">↗</span></a></div>
+    <div className="page-width footer-bottom"><div className="footer-credit"><span>Ivan Raimondi · Technology Innovation Lab</span><a className="footer-department" href="https://weill.cornell.edu/units/systems-and-computational-biomedicine">Systems and Computational Biomedicine · Weill Cornell Medicine</a></div><a href={assetPath("/")}>Back to home <span aria-hidden="true">↗</span></a></div>
   </footer>;
 }

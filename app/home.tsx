@@ -463,7 +463,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
             <LabLogo className="brand-mark" />
             <span className="brand-copy">
               <span className="brand-name">Technology <span className="brand-name-tail">Innovation Lab</span></span>
-              <span className="brand-affiliation">A lab in the making</span>
+              <span className="brand-affiliation">@SCB</span>
             </span>
           </a>
           <div id="primary-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}
@@ -602,7 +602,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
               <div><p className="eyebrow">03 / People</p><h2>Building<br />the team.</h2></div>
               <p>The Technology Innovation Lab is a vision in development, driven by the ambition to bring curious minds together at the intersection of biology, engineering, and AI to develop new tools for biological measurement.</p>
             </div>
-            <p className="team-stage-note"><strong>A vision seeking a home. A team to build.</strong></p>
+            <p className="team-stage-note"><strong>A shared vision. A team to build.</strong></p>
             <div className="people-layout">
               <article className="person-feature" id="person-profile" aria-label={person.name} key={person.name}>
                 <div className="portrait-frame">
@@ -718,13 +718,13 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
           <div>
             <a className="footer-brand" href="#home">
               <LabLogo className="footer-brand-mark" />
-              <span className="footer-brand-copy">Technology<br />Innovation Lab <span className="footer-brand-affiliation">A lab in the making</span></span>
+              <span className="footer-brand-copy">Technology<br />Innovation Lab <span className="footer-brand-affiliation">@SCB</span></span>
             </a>
           </div>
           <div><p className="footer-label">Explore</p><a href="#artifacts">Research</a><a href="#people">People</a><a href="#papers">Publications</a><a href={assetPath("/news/")}>News</a><a href={assetPath("/blog/")}>Blog</a><a href="#join">Get in touch</a></div>
           <div><p className="footer-label">Say hello</p><a href={`mailto:${email}`}>{email}</a><p>Ivan Raimondi<br />Weill Cornell Medicine<br />New York, NY</p></div>
         </div>
-        <div className="page-width footer-bottom"><span>Ivan Raimondi · Technology Innovation Lab</span><a href="#home">Back to top ↑</a></div>
+        <div className="page-width footer-bottom"><div className="footer-credit"><span>Ivan Raimondi · Technology Innovation Lab</span><a className="footer-department" href="https://weill.cornell.edu/units/systems-and-computational-biomedicine">Systems and Computational Biomedicine · Weill Cornell Medicine</a></div><a href="#home">Back to top ↑</a></div>
       </footer>
 
       <dialog ref={dialogRef} className="contact-modal" aria-labelledby="contact-title" aria-describedby="contact-description"

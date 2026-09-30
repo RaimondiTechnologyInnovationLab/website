@@ -17,14 +17,30 @@ async function assertLocalAsset(value, source = base) {
 
 test("Pages contains complete HTML, the approved identity, and no invented colleagues", () => {
   assert.match(html, /<title>Ivan Raimondi \| Technology Innovation Lab<\/title>/);
-  assert.match(html, /A lab in the making/);
+  assert.match(html, /class="brand-affiliation">@SCB</);
   assert.match(html, /Principal Investigator/);
   assert.match(html, /Building.*?the team/s);
   assert.match(html, /Future team/);
+  assert.match(html, /No positions are currently advertised/);
+  assert.match(html, /A shared vision\. A team to build\./);
   assert.match(html, /class="hero-cells"/);
   assert.match(html, /mailto:ivr4003@med.cornell.edu/);
   assert.doesNotMatch(html, /Lena Hart|Milo Chen|Nora Velez|Theo Mercer/);
   assert.equal([...html.matchAll(/<h1[ >]/g)].length, 1);
+});
+
+test("every published page has the understated SCB affiliation and official footer link", async () => {
+  const files = await readdir(output, { recursive: true });
+  for (const file of files.filter((name) => name.endsWith(".html") && name !== "404.html")) {
+    const page = (await readFile(new URL(file, output), "utf8"))
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+    assert.match(page, /class="brand-affiliation">@SCB</, file);
+    assert.match(page, /class="footer-brand-affiliation">@SCB</, file);
+    assert.doesNotMatch(page, /A lab in the making|seeking a home/i, file);
+    const footer = page.match(/<footer\b[^>]*class="site-footer"[^>]*>([\s\S]*?)<\/footer>/i)?.[1];
+    assert.ok(footer, `Missing footer: ${file}`);
+    assert.match(footer, /<a class="footer-department" href="https:\/\/weill\.cornell\.edu\/units\/systems-and-computational-biomedicine">Systems and Computational Biomedicine · Weill Cornell Medicine<\/a>/, file);
+  }
 });
 
 test("all HTML assets exist below the GitHub Pages repository path", async () => {
@@ -47,7 +63,7 @@ test("social previews use the current image at the public Pages URL", async () =
   const values = (name) => metadata
     .filter((tag) => tag.property === name || tag.name === name)
     .map((tag) => tag.content);
-  const imageName = "og-til-cells-2026-09-30-v2.png";
+  const imageName = "og-til-cells-2026-09-30-v3.png";
   const imageURL = new URL(imageName, base).href;
   assert.deepEqual(values("og:image"), [imageURL]);
   assert.deepEqual(values("twitter:image"), [imageURL]);
@@ -65,7 +81,7 @@ test("social previews use the current image at the public Pages URL", async () =
   assert.deepEqual(values("og:image:width"), [String(width)]);
   assert.deepEqual(values("og:image:height"), [String(height)]);
   assert.ok(image.length < 1024 * 1024, "Preview should be under 1 MiB for fast sharing");
-  for (const previousName of ["og.png", "og-til-cells-2026-09.png", "og-til-cells-2026-09-30.png"]) {
+  for (const previousName of ["og.png", "og-til-cells-2026-09.png", "og-til-cells-2026-09-30.png", "og-til-cells-2026-09-30-v2.png"]) {
     assert.deepEqual(await readFile(new URL(previousName, output)), image,
       `${previousName} must also serve the current preview`);
   }

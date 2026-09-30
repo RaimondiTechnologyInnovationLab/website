@@ -21,7 +21,8 @@
    overwriting local work or force-pushing.
 2. Make only the requested product changes. Do not silently revise other copy,
    roles, visual details, or branding. The approved role is Principal Investigator
-   and the brand subtitle is A lab in the making.
+   and the brand subtitle is @SCB. Keep the departmental affiliation understated;
+   do not imply advertised positions or announce a launch without authorization.
 3. For publication, build with `npm run build:pages`, verify with
    `npm run test:pages`, and check `git diff --check`. Run the original
    `npm test` additionally when changes affect the Sites/dev build path.
