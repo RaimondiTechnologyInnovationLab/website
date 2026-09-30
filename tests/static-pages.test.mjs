@@ -47,7 +47,7 @@ test("social previews use the current image at the public Pages URL", async () =
   const values = (name) => metadata
     .filter((tag) => tag.property === name || tag.name === name)
     .map((tag) => tag.content);
-  const imageName = "og-til-cells-2026-09.png";
+  const imageName = "og-til-cells-2026-09-30.png";
   const imageURL = new URL(imageName, base).href;
   assert.deepEqual(values("og:image"), [imageURL]);
   assert.deepEqual(values("twitter:image"), [imageURL]);
@@ -65,8 +65,10 @@ test("social previews use the current image at the public Pages URL", async () =
   assert.deepEqual(values("og:image:width"), [String(width)]);
   assert.deepEqual(values("og:image:height"), [String(height)]);
   assert.ok(image.length < 1024 * 1024, "Preview should be under 1 MiB for fast sharing");
-  assert.deepEqual(await readFile(new URL("og.png", output)), image,
-    "The previous image URL must also serve the current preview");
+  for (const previousName of ["og.png", "og-til-cells-2026-09.png"]) {
+    assert.deepEqual(await readFile(new URL(previousName, output)), image,
+      `${previousName} must also serve the current preview`);
+  }
 });
 
 test("CSS assets resolve and all navigation anchors have destinations", async () => {

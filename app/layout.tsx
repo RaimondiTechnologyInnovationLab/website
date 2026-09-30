@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       images: [
         {
-          url: `${origin}${assetPath("/og-til-cells-2026-09.png")}`,
+          url: `${origin}${assetPath("/og-til-cells-2026-09-30.png")}`,
           width: 1200,
           height: 630,
           alt: "TIL logo and circular cells on black, with Imagining what biology needs Next...",
@@ -48,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title,
       description,
-      images: [`${origin}${assetPath("/og-til-cells-2026-09.png")}`],
+      images: [`${origin}${assetPath("/og-til-cells-2026-09-30.png")}`],
     },
   };
 }
