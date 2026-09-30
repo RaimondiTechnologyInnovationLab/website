@@ -136,6 +136,25 @@ test("valid date, optional author and all supported plain-text block types are a
   })]));
 });
 
+test("published blog posts have their own square editorial illustration", () => {
+  for (const entry of content.getPublishedEntries("blog")) {
+    assert.ok(entry.image, `Missing blog illustration: ${entry.slug}`);
+    assert.match(entry.image.src, /^\/blog-images\//, entry.slug);
+    assert.equal(entry.image.width, entry.image.height, `Blog artwork must be square for the circular crop: ${entry.slug}`);
+  }
+});
+
+test("blog illustrations accept local vector and raster formats", () => {
+  for (const extension of ["svg", "png", "jpg", "jpeg", "webp"]) {
+    assert.doesNotThrow(() => content.validateEditorialEntries([entry({ image: image({
+      src: `/blog-images/cell-boundaries.${extension}`, width: 600, height: 600,
+    }) })]));
+  }
+  for (const src of ["/blog-images/../cells.svg", "/blog-images/cells.svg?x=1", "/blog-images/cells.svg#x", "/blog-images/Cells.svg", "/blog-images/cells.gif"]) {
+    assert.throws(() => content.validateEditorialEntries([entry({ image: image({ src }) })]), /Editorial content:.*image/s);
+  }
+});
+
 test("editorial images are optional and accept supported local formats and dimension limits", () => {
   assert.doesNotThrow(() => content.validateEditorialEntries([entry()]));
   assert.doesNotThrow(() => content.validateEditorialEntries([entry({ image: undefined })]));

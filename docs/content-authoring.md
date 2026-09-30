@@ -48,13 +48,16 @@ Do not commit confidential, embargoed, or unapproved material.
 - `status`: `"draft"` or `"published"`. There is no date-based scheduling: marking
   a future-dated entry published includes it in the next build immediately.
 - `author`: optional approved name. Omit it rather than guessing authorship.
-- `image`: optional approved local photo, with `src`, descriptive `alt`, and
-  original pixel `width` and `height`. Place the raster asset in
+- `image`: an approved local photo or blog illustration, with `src`, descriptive
+  `alt`, and original pixel `width` and `height`. Required for every published
+  blog post; optional for News. Place News raster assets in
   `public/news-images/`; use a lowercase hyphenated filename and PNG, JPG, JPEG,
   or WebP format. Paths in content begin with `/news-images/`, without
   `/website`. Images are displayed through a circular CSS mask on cards and
   article pages. Preserve the scene and keep the speaker small; do not zoom or
   retouch. Optimize web encoding without changing the original dimensions or composition.
+  Blog illustrations go in `public/blog-images/`, with `/blog-images/` paths;
+  SVG is supported there in addition to the raster formats above.
 - `body`: one or more structured blocks:
   - `{ type: "paragraph", text: "..." }`
   - `{ type: "heading", text: "..." }` for a second-level section heading
@@ -68,7 +71,35 @@ use HTTPS or begin with a single `/` for a path on this website, such as
 links; the renderer applies the deployment prefix. Protocol-relative links,
 credentials in links, script URLs, whitespace, and backslashes are rejected.
 There is no arbitrary HTML, embedded script, remote embed, or inline image block.
-Use the entry's optional `image` field for the approved lead photo.
+Use the entry's `image` field for the approved lead photo or illustration.
+
+## Blog illustration series
+
+Every published blog post gets its own small, bespoke scientific illustration,
+shown in the same circular component as News on the homepage, archive and article.
+Use `public/blog-images/before-we-trust-spatial-ai.svg` as the first visual reference.
+
+- Draw one idea from the article, not a generic science or AI symbol. The first
+  illustration uses neighboring cells, RNA dots and competing assignment boundaries.
+  Each subsequent subject should be different while keeping the visual vocabulary.
+- Use flat editorial linework and generous negative space. Match the site palette:
+  cream `#f5f3ed`, paper `#eae7df`, ink `#191c1a`, red `#cf4536`; restrained oxblood
+  `#7b342e` and a pale red tint can distinguish compartments.
+- Prefer a hand-authored SVG for geometric concepts. Use a square 600 × 600 canvas,
+  center the subject in a circle-safe area, and inspect it at the actual 180px card
+  size. The article illustration is capped at 360px. Avoid tiny text, gradients,
+  glossy 3D, stock DNA/brain motifs, circuitry, glows and decorative complexity.
+- SVGs must be self-contained static shapes: no scripts, event handlers, external
+  references, embedded images, fonts or animation. Provide a meaningful `title`
+  and `desc`, plus concise descriptive `image.alt` in the entry. Label conceptual
+  artwork as conceptual rather than implying that it is experimental evidence.
+- If raster artwork is appropriate, use the approved image-generation workflow
+  and the same visual direction, then optimize it. Keep the delivered asset below
+  150KB (vectors should usually be below 15KB). Never reproduce a paper's figure
+  or use confidential/unpublished research as artwork without authorization.
+- Check the circular crop on desktop and mobile and at all three placements.
+  `test:pages` checks that every published blog post has square artwork, a local
+  exported asset, descriptive alternative text and the circular presentation.
 
 ## Pages and preview behavior
 

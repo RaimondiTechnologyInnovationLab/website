@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">Whose RNA is it?</title>
+  <desc id="desc">Two neighboring cells with RNA dots. A solid boundary and a dashed alternative disagree about the dots at their shared edge. A conceptual illustration, not experimental data.</desc>
+  <defs>
+    <clipPath id="round"><circle cx="300" cy="300" r="300"/></clipPath>
+    <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(32)">
+      <path d="M0 0V10" fill="none" stroke="#cf4536" stroke-width="1.2" opacity=".3"/>
+    </pattern>
+  </defs>
+  <g clip-path="url(#round)">
+    <path fill="#eae7df" d="M0 0h600v600H0z"/>
+    <circle cx="300" cy="300" r="265" fill="none" stroke="#d4d5cd" stroke-width="1.5"/>
+    <path d="M79 235C87 171 140 138 194 149C229 156 253 185 282 202C323 226 333 282 315 322C292 371 249 414 186 423C130 431 84 394 74 346C68 310 72 272 79 235Z" fill="#f5f3ed" stroke="#191c1a" stroke-width="3"/>
+    <path d="M282 202C305 161 350 136 394 148C445 161 484 188 503 235C523 285 526 357 491 403C463 440 401 458 351 430C321 413 317 374 315 322C333 282 323 226 282 202Z" fill="#e9c2b8" stroke="#7b342e" stroke-width="3"/>
+    <path d="M282 202C323 226 333 282 315 322C304 346 288 369 266 387C300 365 330 348 348 320C367 290 353 246 323 222C309 211 295 206 282 202Z" fill="url(#hatch)"/>
+    <path d="M282 202C308 207 330 219 346 242C366 271 362 302 344 327C326 351 295 368 266 387" fill="none" stroke="#cf4536" stroke-width="3" stroke-dasharray="8 9" stroke-linecap="round"/>
+    <path d="M144 252C149 229 178 223 199 233C224 245 236 271 226 298C218 321 192 335 170 322C148 310 134 278 144 252Z" fill="#303c37"/>
+    <path d="M392 240C416 235 440 249 444 273C449 299 429 326 406 329C382 332 365 309 366 287C367 263 373 245 392 240Z" fill="#7b342e"/>
+    <g fill="#303c37">
+      <circle cx="123" cy="224" r="5"/><circle cx="197" cy="188" r="5"/><circle cx="247" cy="245" r="5"/>
+      <circle cx="119" cy="314" r="5"/><circle cx="154" cy="362" r="5"/><circle cx="213" cy="385" r="5"/>
+      <circle cx="255" cy="326" r="5"/><circle cx="245" cy="288" r="5"/><circle cx="273" cy="354" r="5"/>
+    </g>
+    <g fill="#cf4536">
+      <circle cx="366" cy="194" r="5"/><circle cx="447" cy="209" r="5"/><circle cx="481" cy="286" r="5"/>
+      <circle cx="455" cy="359" r="5"/><circle cx="403" cy="405" r="5"/><circle cx="351" cy="376" r="5"/>
+      <circle cx="380" cy="353" r="5"/><circle cx="329" cy="272" r="6"/><circle cx="340" cy="298" r="6"/>
+      <circle cx="310" cy="342" r="6"/>
+    </g>
+    <circle cx="329" cy="272" r="13" fill="none" stroke="#cf4536" stroke-width="1.8"/>
+  </g>
+</svg>

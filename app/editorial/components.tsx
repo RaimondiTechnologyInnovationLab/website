@@ -15,7 +15,7 @@ function Arrow() {
   return <span aria-hidden="true" className="arrow-icon" />;
 }
 
-function EditorialPhoto({ image, loading = "lazy" }: {
+function EditorialImage({ image, loading = "lazy" }: {
   image: NonNullable<EditorialEntry["image"]>;
   loading?: "eager" | "lazy";
 }) {
@@ -56,7 +56,7 @@ export function EditorialCard({ kind, entry }: { kind: EditorialKind; entry: Edi
           Read {kind === "news" ? "update" : "post"} <Arrow />
         </a>
       </div>
-      {entry.image && <EditorialPhoto image={entry.image} />}
+      {entry.image && <EditorialImage image={entry.image} />}
     </article>
   );
 }
@@ -128,7 +128,7 @@ export function EditorialArticle({ kind, entry }: { kind: EditorialKind; entry: 
           {entry.author && <span>By {entry.author}</span>}
         </p>
       </header>
-      {entry.image && <figure className="editorial-article-photo"><EditorialPhoto image={entry.image} loading="eager" /></figure>}
+      {entry.image && <figure className={`editorial-article-photo${kind === "blog" ? " editorial-article-illustration" : ""}`}><EditorialImage image={entry.image} loading="eager" /></figure>}
       <div className="editorial-body">
         {entry.body.map((block, index) => <BodyBlock key={index} block={block} />)}
       </div>

@@ -22,7 +22,7 @@ export interface EditorialEntry {
   readonly summary: string;
   readonly status: "draft" | "published";
   readonly author?: string;
-  /** Approved local photo. Rendering masks the full-width composition in a circle. */
+  /** Approved local photo or bespoke blog illustration, displayed in a circle. */
   readonly image?: {
     readonly src: string;
     readonly alt: string;
@@ -65,6 +65,12 @@ const blogEntries: readonly EditorialEntry[] = [
     "date": "2026-09-30",
     "summary": "A critical reading of ResolVI and recent spatial transcriptomics studies: how misplaced RNA can become a biological story, what probabilistic AI can correct, and how to validate the result.",
     "status": "published",
+    "image": {
+      "src": "/blog-images/before-we-trust-spatial-ai.svg",
+      "alt": "Conceptual illustration of two neighboring cells, with RNA dots between a solid cell boundary and a dashed alternative assignment.",
+      "width": 600,
+      "height": 600
+    },
     "body": [
       {
         "type": "paragraph",
@@ -316,8 +322,8 @@ export function validateEditorialEntries(entries: readonly EditorialEntry[]): vo
     if (entry.image !== undefined) {
       const image = entry.image;
       if (!image || typeof image !== "object" || typeof image.src !== "string" || /\s/.test(image.src) ||
-        !/^\/news-images\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|jpe?g|webp)$/.test(image.src)) {
-        throw new Error(`Editorial content: ${entry.slug}.image.src must be a local raster photo in /news-images/.`);
+        !/^(?:\/news-images\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|jpe?g|webp)|\/blog-images\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:svg|png|jpe?g|webp))$/.test(image.src)) {
+        throw new Error(`Editorial content: ${entry.slug}.image.src must be a local photo in /news-images/ or illustration in /blog-images/.`);
       }
       requireText(image.alt, `${entry.slug}.image.alt`);
       for (const field of ["width", "height"] as const) {

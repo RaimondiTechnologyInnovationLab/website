@@ -714,6 +714,7 @@ a:hover > .arrow-icon, button:hover > .arrow-icon { transform: translateX(3px); 
 /* Keep the source's full width: no portrait zoom, retouching or hover scaling. */
 .editorial-image-circle img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center center; }
 .editorial-article-photo { max-width: 560px; margin: 48px auto 0; }
+.editorial-article-illustration { max-width: 360px; }
 .editorial-card-meta, .editorial-article-meta { display: flex; flex-wrap: wrap; gap: 10px 20px; color: var(--muted); font-size: .8125rem; line-height: 1.6; }
 .editorial-card-title { max-width: 900px; margin-top: 16px; font-size: clamp(1.65rem, 2.5vw, 2.4rem); font-weight: 500; line-height: 1.2; letter-spacing: -.04em; }
 .editorial-card-title a:hover { color: var(--red); }

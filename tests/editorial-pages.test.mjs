@@ -218,6 +218,35 @@ test("home and News cards show the Roswell Park article and its circular photogr
   }
 });
 
+test("each published blog illustration appears in its circular card and article", async () => {
+  const archive = markup(documents.find((page) => page.path === "blog/").html);
+  const cards = [...archive.matchAll(/<article\b[^>]*\bclass="[^"]*\beditorial-card\b[^"]*"[^>]*>([\s\S]*?)<\/article>/gi)];
+  for (const [index, [, card]] of cards.entries()) {
+    const img = attributes(card.match(/<img\b[^>]*>/i)?.[0] ?? "");
+    assert.match(card, /\beditorial-image-circle\b/);
+    assert.match(img.src ?? "", /^\/website\/blog-images\//);
+    assert.ok(img.alt?.trim());
+    assert.equal(img.width, img.height);
+    const href = attributes(card.match(/<a\b[^>]*>/i)?.[0] ?? "").href;
+    const article = markup(await readFile(new URL(`${href.replace(/^\/website\//, "")}index.html`, output), "utf8"));
+    assert.ok(article.includes(`src="${img.src}"`), href);
+    assert.match(article, /\beditorial-article-illustration\b/);
+    if (index < 3) assert.ok(markup(documents[0].html).includes(`src="${img.src}"`), "The latest blog image belongs on the homepage too");
+    const asset = await readFile(new URL(img.src.replace(/^\/website\//, ""), output));
+    assert.ok(asset.length < 150_000, "Keep blog thumbnail assets small");
+    if (img.src.endsWith(".svg")) {
+      const svg = asset.toString("utf8");
+      assert.match(svg, /viewBox="0 0 \d+ \d+"/);
+      assert.match(svg, /<desc\b/);
+      assert.doesNotMatch(svg, /<(?:script|foreignObject|image|text|filter|animate|set)\b|\bon[a-z]+\s*=|\bhref\s*=|<!ENTITY|<!DOCTYPE/i,
+        "Blog vectors must be self-contained, text-free static artwork");
+      for (const [, element] of svg.matchAll(/<\/?([a-z][\w:-]*)/gi)) {
+        assert.ok(["svg", "title", "desc", "defs", "clipPath", "pattern", "g", "path", "circle", "ellipse", "rect", "line", "polyline", "polygon"].includes(element), `Unexpected SVG element: ${element}`);
+      }
+    }
+  }
+});
+
 test("circular editorial photos use centered cover cropping without a zoom transform", async () => {
   const cssFiles = (await readdir(output, { recursive: true })).filter((file) => file.endsWith(".css"));
   assert.ok(cssFiles.length, "Expected exported stylesheets");
