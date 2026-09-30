@@ -64,6 +64,17 @@ The build exports complete HTML plus interactive JavaScript to `out/`. It uses
 previews. Its temporary build directory is removed after completion; the local
 server and existing `dist/` build are preserved.
 
+## News and Blog
+
+The homepage links to `/news/` and `/blog/` and previews the latest published
+entries. Both collections start empty; no example posts appear on the site.
+See [the content authoring guide](docs/content-authoring.md) to add approved
+entries, including article bodies, dates, summaries, and draft status.
+
+The Pages export checks that both archives exist. It uses slashless export
+requests to work around a Vinext prerender redirect issue, then normalizes
+editorial HTML to directory indexes for the public slash-terminated URLs.
+
 In repository **Settings → Pages**, select **GitHub Actions** as the source.
 The Pages workflow builds, checks, and publishes on each push to `main`; it can
 also be run manually from Actions. GitHub supplies the deployment token, so no
