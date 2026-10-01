@@ -56,6 +56,12 @@ Do not commit confidential, embargoed, or unapproved material.
   `/website`. Images are displayed through a circular CSS mask on cards and
   article pages. Preserve the scene and keep the speaker small; do not zoom or
   retouch. Optimize web encoding without changing the original dimensions or composition.
+  User-supplied photographs are always displayed in black and white using CSS
+  `grayscale(1)`, preserving the original image file. The `/news-images/` path
+  applies this automatically to every placement, including future entries.
+  Profile photographs follow the same default. For a user-supplied photograph
+  elsewhere on the site, add `className="user-supplied-photo"` to its image.
+  Keep scientific illustrations and bespoke blog artwork in their original colors.
   Blog illustrations go in `public/blog-images/`, with `/blog-images/` paths;
   SVG is supported there in addition to the raster formats above.
 - `body`: one or more structured blocks:

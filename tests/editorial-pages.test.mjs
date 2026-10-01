@@ -275,6 +275,30 @@ test("circular editorial photos use centered cover cropping without a zoom trans
   }
 });
 
+test("user-supplied photographs default to grayscale while scientific artwork stays in color", async () => {
+  const cssFiles = (await readdir(output, { recursive: true })).filter((file) => file.endsWith(".css"));
+  const css = (await Promise.all(cssFiles.map((file) => readFile(new URL(file, output), "utf8")))).join("\n");
+  const rules = [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)];
+  const grayscaleRules = rules.filter(([, , body]) => /(?:^|;)filter:grayscale\((?:1|100%)?\)(?:;|$)/.test(body));
+  assert.equal(grayscaleRules.length, 1, "Keep one explicit, reusable photographic treatment");
+  const selectors = grayscaleRules[0][1].split(",").map((selector) => selector.trim().replaceAll('"', ""));
+  assert.deepEqual(new Set(selectors), new Set([
+    "img[src*=/news-images/]", ".portrait-frame img", ".user-supplied-photo",
+  ]), "Only photographs should receive grayscale, independent of the Pages base path or filename");
+  assert.ok(!selectors.some((selector) => selector.includes("blog-images")), "Blog artwork must keep its palette");
+  const home = markup(documents.find((page) => page.file === "index.html").html);
+  const newsPhotos = [...home.matchAll(/<img\b[^>]*>/gi)].map(([tag]) => attributes(tag))
+    .filter((image) => image.src?.includes("/news-images/"));
+  assert.ok(newsPhotos.some((image) => image.src === roswellPhotoSource), "The symposium photo uses the shared photographic treatment");
+  const blogArt = [...home.matchAll(/<img\b[^>]*>/gi)].map(([tag]) => attributes(tag))
+    .filter((image) => image.src?.includes("/blog-images/"));
+  assert.ok(blogArt.length, "Expected scientific blog artwork");
+  for (const image of blogArt) {
+    assert.doesNotMatch(image.class ?? "", /user-supplied-photo/);
+    assert.doesNotMatch(image.style ?? "", /grayscale/);
+  }
+});
+
 test("the exported symposium photo retains full dimensions and valid still WebP encoding", async () => {
   const photo = await readFile(new URL(roswellPhotoPath, output));
   assert.deepEqual(photo, await readFile(new URL(`../public/${roswellPhotoPath}`, import.meta.url)),
