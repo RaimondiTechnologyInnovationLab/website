@@ -13,6 +13,18 @@
   Do not invoke Sites publication or change hosting providers unless the user
   requests it.
 
+## Lab voice
+
+- Speak as the laboratory in site-owned copy: use we, us, and our (for example,
+  our research, our vision, and our goal), not I, me, or my. Apply this to pages,
+  navigation, contact panels, accessibility labels, and search/social metadata.
+- Rewrite in context and preserve scientific meaning. Keep individual biographies,
+  names, author credits, paper titles, and attributed quotations factual. A
+  visitor's prefilled enquiry speaks as the visitor and may use I or my.
+- Collective voice does not imply that planned roles are filled or positions are
+  open. Preserve future-team and availability qualifications; do not invent
+  collaborators, affiliations, results, or announcements.
+
 ## Keep local, remote, and production aligned
 
 1. Before editing, inspect the working tree and fetch `github`. With a clean

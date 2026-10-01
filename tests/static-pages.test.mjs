@@ -16,7 +16,7 @@ async function assertLocalAsset(value, source = base) {
 }
 
 test("Pages contains complete HTML, the approved identity, and no invented colleagues", () => {
-  assert.match(html, /<title>Ivan Raimondi \| Technology Innovation Lab<\/title>/);
+  assert.match(html, /<title>Technology Innovation Lab<\/title>/);
   assert.match(html, /class="brand-affiliation">@SCB</);
   assert.match(html, /Principal Investigator/);
   assert.match(html, /Building.*?the team/s);
@@ -101,4 +101,41 @@ test("CSS assets resolve and all navigation anchors have destinations", async ()
     assert.ok(ids.has(match[1]), `Missing anchor: ${match[1]}`);
   }
   await access(fileURLToPath(new URL(".nojekyll", output)));
+});
+
+test("homepage narration and social metadata speak as the laboratory", () => {
+  const markup = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  const text = markup.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  assert.match(text, /Our research connects molecular invention/);
+  assert.match(text, /Our goal is to build integrated technologies/);
+  assert.match(text, /02 \/ Our approach/);
+  assert.match(text, /Our vision for the Technology Innovation Lab is to bring curious minds together/);
+  assert.match(text, /Contact us to exchange ideas/);
+  assert.match(text, /For questions about our research/);
+  assert.match(text, /Email us/);
+  assert.match(text, /Ivan develops genomic and multiomic methods for studying individual cells/);
+  assert.match(text, /His work contributes to our shared vision/);
+
+  const metadata = [...markup.matchAll(/<meta\b[^>]*>/g)].map(([tag]) =>
+    Object.fromEntries([...tag.matchAll(/([\w:-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value])),
+  );
+  for (const key of ["description", "og:description", "twitter:description"]) {
+    const values = metadata.filter((tag) => tag.name === key || tag.property === key).map((tag) => tag.content);
+    assert.deepEqual(values, ["Our research connects genomic and multiomic methods with automation. Explore our vision for the Technology Innovation Lab."]);
+  }
+  for (const key of ["og:title", "twitter:title"]) {
+    const values = metadata.filter((tag) => tag.name === key || tag.property === key).map((tag) => tag.content);
+    assert.deepEqual(values, ["Technology Innovation Lab"]);
+  }
+});
+
+test("published pages do not restore personal-site narration", async () => {
+  const files = await readdir(output, { recursive: true });
+  for (const file of files.filter((name) => name.endsWith(".html") && name !== "404.html")) {
+    // Inspect rendered copy and metadata, not code identifiers or the visitor's
+    // URL-encoded mailto message. Attributed quotations retain their speaker.
+    const page = (await readFile(new URL(file, output), "utf8"))
+      .replace(/<(script|style|blockquote)\b[^>]*>[\s\S]*?<\/\1>/gi, "");
+    assert.doesNotMatch(page, /\b(?:my (?:research|vision|goals?)|contact me|his vision for a future Technology Innovation Lab)\b/i, file);
+  }
 });

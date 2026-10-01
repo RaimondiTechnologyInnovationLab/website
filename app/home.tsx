@@ -14,7 +14,7 @@ const people = [
     focus: "High-resolution genomic and multiomic tool building",
     mode: "Molecular invention / experimental design",
     summary:
-      "Ivan develops genomic and multiomic methods for studying individual cells. This site brings together his research and his vision for a future Technology Innovation Lab.",
+      "Ivan develops genomic and multiomic methods for studying individual cells. His work contributes to our shared vision for the Technology Innovation Lab.",
     signals: ["Genomics", "Multiomics", "Automation"],
     photo: assetPath("/raimondi-ivan-casual.png"),
   },
@@ -136,7 +136,7 @@ const tracks = [
   },
   {
     label: "Future team",
-    title: "Introduce your interests and expertise as the vision for the lab develops.",
+    title: "Introduce your interests and expertise as our vision for the lab develops.",
   },
 ];
 
@@ -229,7 +229,7 @@ function PublicationCover({
 }
 
 const email = "ivr4003@med.cornell.edu";
-const manifesto = "The goal is to build integrated technologies that increase biological signal, reduce experimental noise, and make complex measurement reproducible at scale.";
+const manifesto = "Our goal is to build integrated technologies that increase biological signal, reduce experimental noise, and make complex measurement reproducible at scale.";
 
 function subscribeMotionPreference(onChange: () => void) {
   const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -447,7 +447,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
       await navigator.clipboard.writeText(email);
       setCopyStatus("Email address copied.");
     } catch {
-      setCopyStatus("Select the address above to copy it, or use Email Ivan.");
+      setCopyStatus("Select the address above to copy it, or use Email us.");
     }
     if (copyTimer.current) clearTimeout(copyTimer.current);
     copyTimer.current = setTimeout(() => setCopyStatus(""), 5000);
@@ -514,7 +514,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
         <section id="artifacts" className="core-section page-width section-pad">
           <div className="section-heading split-heading" data-reveal>
             <div><p className="eyebrow">01 / Research</p><h2>New tools.<br /><em>New possibilities.</em></h2></div>
-            <p>My research connects molecular invention, single-cell measurement, and automation to make difficult biological questions experimentally accessible.</p>
+            <p>Our research connects molecular invention, single-cell measurement, and automation to make difficult biological questions experimentally accessible.</p>
           </div>
           <div className="platform-grid">
             <article className="platform-card multiomics-card" data-reveal>
@@ -587,7 +587,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
         <section id="vision" className="vision-section">
           <div className="vision-grid" aria-hidden="true" />
           <div className="page-width vision-content">
-            <p className="eyebrow light">02 / The approach</p>
+            <p className="eyebrow light">02 / Our approach</p>
             <h2 className="vision-manifesto" aria-label={manifesto}>
               {manifesto.split(" ").map((word, index) => (
                 <span key={index} data-vision-word aria-hidden="true" className={/signal|complex/.test(word) ? "highlight" : ""}>{word}{" "}</span>
@@ -600,7 +600,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
           <div className="page-width">
             <div className="section-heading split-heading" data-reveal>
               <div><p className="eyebrow">03 / People</p><h2>Building<br />the team.</h2></div>
-              <p>The Technology Innovation Lab is a vision in development, driven by the ambition to bring curious minds together at the intersection of biology, engineering, and AI to develop new tools for biological measurement.</p>
+              <p>Our vision for the Technology Innovation Lab is to bring curious minds together at the intersection of biology, engineering, and AI to develop new tools for biological measurement.</p>
             </div>
             <p className="team-stage-note"><strong>A shared vision. A team to build.</strong></p>
             <div className="people-layout">
@@ -698,7 +698,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
             <div className="join-intro" data-reveal>
               <p className="eyebrow light">06 / Let’s connect</p>
               <h2>What would you<br /><em>make possible?</em></h2>
-              <p>Interested in the research direction? Contact me to exchange ideas, discuss a possible collaboration, or stay in touch as plans for the lab develop.</p>
+              <p>Interested in our research direction? Contact us to exchange ideas, discuss a possible collaboration, or stay in touch as our plans for the lab develop.</p>
               <p className="join-status-note">No positions are currently advertised. Expressions of interest are welcome.</p>
               <button className="button button-light" type="button" onClick={openContact}>Let’s start a conversation <Arrow /></button>
             </div>
@@ -732,9 +732,9 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
         <div className="contact-inner">
           <button className="modal-close" type="button" onClick={() => setContactOpen(false)} aria-label="Close contact panel">×</button>
           <p className="eyebrow">Get in touch</p><h2 id="contact-title">Good science starts<br />with a conversation.</h2>
-          <p id="contact-description">For questions about my research, possible collaborations, or the future lab, get in touch. Expressions of interest are welcome; no positions are currently advertised.</p>
+          <p id="contact-description">For questions about our research, possible collaborations, or our plans for the lab, get in touch. Expressions of interest are welcome; no positions are currently advertised.</p>
           <a className="contact-address" href={`mailto:${email}`}>{email}</a>
-          <div className="contact-actions"><a className="button button-dark" href={`mailto:${email}`}>Email Ivan <Arrow /></a>
+          <div className="contact-actions"><a className="button button-dark" href={`mailto:${email}`}>Email us <Arrow /></a>
             <button className="text-link" type="button" onClick={copyEmail}>Copy email</button></div>
           <p className="copy-status" role="status">{copyStatus}</p>
         </div>

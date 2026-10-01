@@ -35,3 +35,12 @@ test("a new record supplies its own metadata and contact while drafts stay priva
   assert.equal(contact.searchParams.get("subject"), "Future method — starter kit interest");
   assert.ok(contact.searchParams.get("body").includes("Future method"));
 });
+
+test("the enquiry keeps the visitor as the speaker", () => {
+  const technology = content.getTechnology("dnd-seq");
+  const contact = new URL(content.technologyContactHref(technology));
+  assert.equal(contact.pathname, "ivr4003@med.cornell.edu");
+  assert.match(contact.searchParams.get("body"), /^Hello Ivan,\n\nI’m interested in trying D&D-seq\./);
+  assert.match(technology.access.description, /Tell us about your research question/);
+  assert.match(technology.access.description, /We can discuss/);
+});

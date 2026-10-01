@@ -5,6 +5,13 @@ from `app/technologies/content.ts`. There is no homepage section, backend, or
 interest database. Email links open the visitor's email client; nothing is sent
 automatically.
 
+## Lab voice
+
+Describe the lab's work with we, us, and our in introductions, method descriptions,
+contact copy, and metadata. Keep publication titles and individual credits intact.
+The prefilled email body is written by the visitor: its singular “I’m interested”
+is intentional. Do not change the speaker or imply that an enquiry is from a team.
+
 ## Add a technology
 
 Add one approved `Technology` record to the `technologies` array. Use a unique,

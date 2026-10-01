@@ -4,6 +4,14 @@ News holds announcements, publications, and milestones. Blog holds longer notes
 about science, technology, and methods. The website shows honest empty states
 for any collection without approved published material.
 
+## Lab voice
+
+Use we, us, and our for the lab's perspective, including titles, summaries,
+article text, and metadata. For example: our research, our vision, our goal.
+Keep named people, biographies, author credits, publication titles, and properly
+attributed quotations accurate rather than pluralizing them. Describe planned
+roles as future roles and do not turn collective voice into a launch announcement.
+
 ## Add an entry
 
 1. Edit `app/editorial/content.ts`.

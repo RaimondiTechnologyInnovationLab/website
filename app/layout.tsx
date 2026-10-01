@@ -21,9 +21,9 @@ async function siteOrigin(): Promise<string> {
 
 export async function generateMetadata(): Promise<Metadata> {
   const origin = await siteOrigin();
-  const title = "Ivan Raimondi | Technology Innovation Lab";
+  const title = "Technology Innovation Lab";
   const description =
-    "Ivan Raimondi’s research in genomic and multiomic methods, and his vision for a future Technology Innovation Lab.";
+    "Our research connects genomic and multiomic methods with automation. Explore our vision for the Technology Innovation Lab.";
 
   return {
     title,

@@ -29,7 +29,7 @@ const html = await response.text();
 test("the production worker serves the lab with meaningful server-rendered content", () => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-  assert.match(html, /<title>Ivan Raimondi \| Technology Innovation Lab<\/title>/);
+  assert.match(html, /<title>Technology Innovation Lab<\/title>/);
   assert.equal([...html.matchAll(/<h1[ >]/g)].length, 1);
   assert.match(html, /Single-cell mapping of regulatory DNA-protein interactions/);
   assert.match(html, /mailto:ivr4003@med.cornell.edu/);

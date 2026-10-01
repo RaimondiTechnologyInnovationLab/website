@@ -1,6 +1,7 @@
 # Technology Innovation Lab
 
-Ivan Raimondi’s research and vision for a future lab.
+Our research in genomics, multiomics, and automation, and our vision for the
+Technology Innovation Lab.
 
 Public website: https://raimonditechnologyinnovationlab.github.io/website/
 
