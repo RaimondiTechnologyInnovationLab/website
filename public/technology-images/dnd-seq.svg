@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <title>D&amp;D-seq</title>
+  <desc>A conceptual molecular illustration: DNA, coral interaction sites and an enzyme-like form inside a softly outlined cell. Not a molecular structure or experimental result.</desc>
+  <defs><clipPath id="disc"><circle cx="300" cy="300" r="300"/></clipPath><pattern id="grain" width="17" height="17" patternUnits="userSpaceOnUse"><circle cx="3" cy="5" r=".65" fill="#817d6e" opacity=".17"/><circle cx="12" cy="14" r=".5" fill="#817d6e" opacity=".13"/></pattern></defs>
+  <g clip-path="url(#disc)">
+    <circle cx="300" cy="300" r="300" fill="#eae7dd"/>
+    <circle cx="300" cy="300" r="276" fill="none" stroke="#d6d2c5"/>
+    <circle cx="300" cy="300" r="250" fill="none" stroke="#d6d2c5" stroke-dasharray="2 9"/>
+    <path d="M166 151C228 105 376 117 427 182C490 262 467 389 393 444C321 498 183 468 143 379C106 298 101 199 166 151Z" fill="#f4f1e7" stroke="#626b60" stroke-width="2"/>
+    <path d="M182 166C241 134 365 137 410 194C463 266 441 373 378 421C315 467 202 443 165 366C135 299 129 207 182 166Z" fill="none" stroke="#bcc3b2" stroke-width="1"/>
+    <path d="M146 335C203 401 241 228 301 287S400 224 454 298" fill="none" stroke="#c84839" stroke-width="5"/>
+    <path d="M146 296C203 230 241 403 301 344S400 407 454 335" fill="none" stroke="#3c5148" stroke-width="5"/>
+    <g stroke="#818c77" stroke-width="1.7"><path d="M159 308L159 345M177 290L177 352M195 289L195 343M213 309L213 321M231 277L231 355M249 264L249 369M267 271L267 365M285 285L285 352M303 290L303 341M321 302L321 331M339 277L339 350M357 269L357 361M375 268L375 367M393 275L393 362M411 284L411 354M429 289L429 346M447 298L447 339"/></g>
+    <path d="M242 206C230 184 248 162 273 165C286 139 321 146 329 169C358 163 372 189 359 211C377 235 352 260 328 253C310 275 280 264 274 245C247 251 229 229 242 206Z" fill="#384b41" stroke="#24372e" stroke-width="2"/>
+    <path d="M258 200C268 179 292 184 302 171M316 185C341 191 346 214 332 233M262 217C270 234 295 241 311 225" fill="none" stroke="#80907b" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="277" cy="275" r="31" fill="#d66d5b" opacity=".16"/>
+    <circle cx="277" cy="275" r="17" fill="none" stroke="#d0745f" stroke-dasharray="3 4"/>
+    <circle cx="277" cy="275" r="5" fill="#bd4938"/>
+    <path d="M283 249L278 259" stroke="#c05040" stroke-width="2" stroke-dasharray="2 3"/>
+    <g fill="#c84839"><circle cx="363" cy="361" r="5"/><circle cx="216" cy="318" r="4"/><circle cx="338" cy="289" r="4"/></g>
+    <g fill="#7f8b74"><circle cx="194" cy="213" r="3"/><circle cx="396" cy="234" r="3"/><circle cx="205" cy="407" r="3"/><circle cx="364" cy="412" r="3"/><circle cx="306" cy="401" r="2"/></g>
+    <rect width="600" height="600" fill="url(#grain)"/>
+  </g>
+</svg>

@@ -81,6 +81,14 @@ The Pages workflow builds, checks, and publishes on each push to `main`; it can
 also be run manually from Actions. GitHub supplies the deployment token, so no
 custom credential or paid hosting service is needed in the workflow.
 
+## Try our technologies
+
+The separate `/technologies/` hub starts with D&D-seq. Technology records generate
+the cards, dedicated pages, resource states, and direct email enquiries without
+adding content to the homepage scroll. See
+[the technology authoring guide](docs/technology-authoring.md) to add an approved
+method or replace a Coming soon label with a real document.
+
 ## Link preview image
 
 Open Graph and Twitter use `public/og-til-cells-2026-09-30-v3.png` (1200 × 630).

@@ -468,7 +468,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
           </a>
           <div id="primary-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}
             inert={!navigationVisible} aria-hidden={!navigationVisible}>
-            {[["Research", "#artifacts"], ["Approach", "#vision"], ["People", "#people"], ["Publications", "#papers"], ["News", assetPath("/news/")], ["Blog", assetPath("/blog/")]].map(([label, href]) => (
+            {[["Research", "#artifacts"], ["Approach", "#vision"], ["People", "#people"], ["Publications", "#papers"], ["News", assetPath("/news/")], ["Blog", assetPath("/blog/")], ["Try our technologies", assetPath("/technologies/")]].map(([label, href]) => (
               <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
             ))}
             <a className="mobile-join" href="#join" onClick={() => setMenuOpen(false)}>Get in touch <Arrow /></a>
@@ -721,7 +721,7 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
               <span className="footer-brand-copy">Technology<br />Innovation Lab <span className="footer-brand-affiliation">@SCB</span></span>
             </a>
           </div>
-          <div><p className="footer-label">Explore</p><a href="#artifacts">Research</a><a href="#people">People</a><a href="#papers">Publications</a><a href={assetPath("/news/")}>News</a><a href={assetPath("/blog/")}>Blog</a><a href="#join">Get in touch</a></div>
+          <div><p className="footer-label">Explore</p><a href="#artifacts">Research</a><a href="#people">People</a><a href="#papers">Publications</a><a href={assetPath("/news/")}>News</a><a href={assetPath("/blog/")}>Blog</a><a href={assetPath("/technologies/")}>Try our technologies</a><a href="#join">Get in touch</a></div>
           <div><p className="footer-label">Say hello</p><a href={`mailto:${email}`}>{email}</a><p>Ivan Raimondi<br />Weill Cornell Medicine<br />New York, NY</p></div>
         </div>
         <div className="page-width footer-bottom"><div className="footer-credit"><span>Ivan Raimondi · Technology Innovation Lab</span><a className="footer-department" href="https://weill.cornell.edu/units/systems-and-computational-biomedicine">Systems and Computational Biomedicine · Weill Cornell Medicine</a></div><a href="#home">Back to top ↑</a></div>

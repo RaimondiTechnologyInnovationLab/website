@@ -32,7 +32,7 @@ try {
   });
   // A compiler exit alone is insufficient: Vinext may skip an unrenderable
   // route. Check every required archive before replacing the previous output.
-  for (const page of ["index.html", "news.html", "blog.html"]) {
+  for (const page of ["index.html", "news.html", "blog.html", "technologies.html"]) {
     await access(join(staging, "dist/client", page));
   }
   await rm(output, { recursive: true, force: true });
@@ -44,11 +44,11 @@ try {
   await rm(join(output, "website"), { recursive: true, force: true });
   // Export with trailingSlash:false to avoid Vinext's prerender 308 bug, then
   // serve clean, slash-terminated URLs on GitHub Pages. Preserve .rsc files in
-  // their exporter locations. Only editorial routes need normalization.
+  // their exporter locations. Normalize collection and technology routes.
   const files = await readdir(output, { recursive: true });
   // Move deepest routes first so an article with slug "index" cannot be
   // overwritten by its collection's new index.html.
-  const editorialHTML = files.filter((file) => /^(?:news|blog)(?:\/.*)?\.html$/.test(file))
+  const editorialHTML = files.filter((file) => /^(?:news|blog|technologies)(?:\/.*)?\.html$/.test(file))
     .sort((a, b) => b.length - a.length);
   for (const file of editorialHTML) {
     const destination = join(output, file.slice(0, -".html".length), "index.html");

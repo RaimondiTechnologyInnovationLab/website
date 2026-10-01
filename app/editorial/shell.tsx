@@ -7,10 +7,10 @@ import LabLogo from "../lab-logo";
 const links = [
   ["Research", "/#artifacts"], ["Approach", "/#vision"],
   ["People", "/#people"], ["Publications", "/#papers"],
-  ["News", "/news/"], ["Blog", "/blog/"],
+  ["News", "/news/"], ["Blog", "/blog/"], ["Try our technologies", "/technologies/"],
 ];
 
-export function EditorialHeader({ active }: { active: "news" | "blog" }) {
+export function EditorialHeader({ active }: { active: "news" | "blog" | "technologies" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -45,7 +45,7 @@ export function EditorialHeader({ active }: { active: "news" | "blog" }) {
           <span className="brand-copy"><span className="brand-name">Technology <span className="brand-name-tail">Innovation Lab</span></span><span className="brand-affiliation">@SCB</span></span>
         </a>
         <div id="primary-links" className={`nav-links ${menuOpen ? "is-open" : ""}`}>
-          {links.map(([label, href]) => <a key={href} href={assetPath(href)} aria-current={label.toLowerCase() === active ? "page" : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
+          {links.map(([label, href]) => <a key={href} href={assetPath(href)} aria-current={href === `/${active}/` ? "page" : undefined} onClick={() => setMenuOpen(false)}>{label}</a>)}
           <a className="mobile-join" href={assetPath("/#join")}>Get in touch <span className="arrow-icon" aria-hidden="true" /></a>
         </div>
         <div className="nav-actions">
