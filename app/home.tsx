@@ -682,12 +682,12 @@ export default function Home({ newsPreview, blogPreview }: { newsPreview: React.
               <div className="updates-column" id="news">
                 <div className="updates-column-heading"><h3>News</h3><span className="eyebrow">Announcements &amp; milestones</span></div>
                 {newsPreview}
-                <a className="text-link" href={assetPath("/news/")}>All news <Arrow /></a>
+                <a className="text-link" href={assetPath("/news/")}>All News <Arrow /></a>
               </div>
               <div className="updates-column" id="blog">
                 <div className="updates-column-heading"><h3>Blog</h3><span className="eyebrow">Ideas &amp; perspectives</span></div>
                 {blogPreview}
-                <a className="text-link" href={assetPath("/blog/")}>Explore the blog <Arrow /></a>
+                <a className="text-link" href={assetPath("/blog/")}>All Blog Posts <Arrow /></a>
               </div>
             </div>
           </div>

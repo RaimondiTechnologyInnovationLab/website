@@ -52,14 +52,26 @@ const news = [
   published("news", "recent", "2026-09-29"),
 ];
 const blog = [
+  published("blog", "older-blog", "2026-03-02"),
   draft("blog"),
-  published("blog", "approved-blog", "2026-09-28"),
+  published("blog", "latest-zeta", "2026-09-30"),
   // A valid slug named index must not collide with the archive index.html.
   published("blog", "index", "2026-09-27"),
+  published("blog", "latest-alpha", "2026-09-30"),
+  published("blog", "approved-blog", "2026-09-28"),
 ];
 
 function dom(html) {
   return html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+}
+
+function cardSlugs(html, kind) {
+  return [...html.matchAll(/<article\b[^>]*\bclass="[^"]*\beditorial-card\b[^"]*"[^>]*>([\s\S]*?)<\/article>/gi)]
+    .flatMap(([, card]) => {
+      const heading = card.match(/<h3\b[^>]*>([\s\S]*?)<\/h3>/i)?.[1] ?? "";
+      const slug = heading.match(new RegExp(`href="/website/${kind}/([^"/]+)/"`))?.[1];
+      return slug ? [slug] : [];
+    });
 }
 
 function replaceCollections(sourceText, collections) {
@@ -118,17 +130,15 @@ test("an isolated export generates approved article pages without shipping synth
     const home = dom(await readFile(join(output, "index.html"), "utf8"));
     const archiveNews = dom(await readFile(join(output, "news/index.html"), "utf8"));
     const archiveBlog = dom(await readFile(join(output, "blog/index.html"), "utf8"));
-    const expectedNewsOrder = ["latest-alpha", "latest-zeta", "recent", "older", "oldest"];
-    let previous = -1;
-    for (const slug of expectedNewsOrder) {
-      const position = archiveNews.indexOf(`PUBLIC_NEWS_TITLE_${slug}`);
-      assert.ok(position > previous, `Archive ordering is wrong for ${slug}`);
-      previous = position;
+    for (const [kind, archive, expectedOrder] of [
+      ["news", archiveNews, ["latest-alpha", "latest-zeta", "recent", "older", "oldest"]],
+      ["blog", archiveBlog, ["latest-alpha", "latest-zeta", "approved-blog", "index", "older-blog"]],
+    ]) {
+      assert.deepEqual(cardSlugs(home, kind), expectedOrder.slice(0, 3),
+        `The ${kind} homepage preview must contain exactly the latest three published entries in order`);
+      assert.deepEqual(cardSlugs(archive, kind), expectedOrder,
+        `The ${kind} archive must retain every published entry in order, including entries outside the homepage preview`);
     }
-    for (const slug of expectedNewsOrder.slice(0, 3)) assert.ok(home.includes(`PUBLIC_NEWS_TITLE_${slug}`), slug);
-    for (const slug of expectedNewsOrder.slice(3)) assert.ok(!home.includes(`PUBLIC_NEWS_TITLE_${slug}`), `Homepage must preview only three items: ${slug}`);
-    assert.match(archiveBlog, /PUBLIC_BLOG_TITLE_approved-blog/);
-    assert.match(home, /PUBLIC_BLOG_TITLE_approved-blog/);
 
     for (const [kind, entries] of [["news", news], ["blog", blog]]) {
       for (const entry of entries.filter((entry) => entry.status === "published")) {

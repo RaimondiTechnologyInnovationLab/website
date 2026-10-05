@@ -135,9 +135,10 @@ test("News and Blog are reachable from home content and every header and footer"
   }
   const homeMain = markup(documents[0].html).match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1];
   assert.ok(homeMain);
-  for (const kind of ["news", "blog"]) {
-    assert.ok([...homeMain.matchAll(/<a\b[^>]*>/gi)].some(([tag]) => attributes(tag).href === `/website/${kind}/`),
-      `Homepage content must introduce ${kind}, beyond navigation`);
+  for (const [kind, label] of [["news", "All News"], ["blog", "All Blog Posts"]]) {
+    assert.ok([...homeMain.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/gi)].some(([link]) =>
+      attributes(link.match(/^<a\b[^>]*>/i)[0]).href === `/website/${kind}/` && textContent(link) === label),
+      `Homepage content must clearly link to the full ${kind} archive as "${label}"`);
   }
 });
 
