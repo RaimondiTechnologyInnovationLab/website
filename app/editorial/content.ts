@@ -60,6 +60,212 @@ const newsEntries: readonly EditorialEntry[] = [
 ];
 const blogEntries: readonly EditorialEntry[] = [
   {
+    "slug": "a-protein-can-carry-a-watermark",
+    "title": "A protein can carry a watermark. What does it prove?",
+    "date": "2026-10-05",
+    "summary": "SynthIDBio embeds detectable signals in designed protein sequences and predicted structures. We examine the binding evidence, the detection trade-offs, and what a watermark can establish about provenance.",
+    "status": "published",
+    "image": {
+      "src": "/blog-images/protein-watermark-provenance.svg",
+      "alt": "Conceptual folded protein with a distributed red sequence pattern beside a binding partner; an inset shows a pattern across several positions.",
+      "width": 600,
+      "height": 600
+    },
+    "body": [
+      {
+        "type": "paragraph",
+        "text": "A designed protein arrives in a laboratory as an amino-acid sequence. It binds its intended target, and the measurement looks convincing. Somewhere between design, export and synthesis, however, the record of how that sequence was generated has become incomplete. The binding assay answers a biological question. Recovering the design history requires a different kind of evidence."
+      },
+      {
+        "type": "paragraph",
+        "text": "Function-preserving watermarking of AI-generated proteins, published in Nature on 30 September 2026, makes that second question experimentally tangible. Stutz and colleagues introduce SynthIDBio: methods that place detectable statistical signals in designed protein sequences and predicted structures. The sequence experiments show that a watermark can coexist with strong binding activity. Understanding what this establishes requires us to follow the signal from generation through selection, measurement and detection."
+      },
+      {
+        "type": "link",
+        "text": "This week’s paper: Stutz et al., Function-preserving watermarking of AI-generated proteins (Nature, 30 September 2026)",
+        "href": "https://www.nature.com/articles/s41586-026-10965-y"
+      },
+      {
+        "type": "heading",
+        "text": "Where can a protein carry information about its origin?"
+      },
+      {
+        "type": "paragraph",
+        "text": "A protein sequence already contains information about how a molecule can fold and interact. Many positions nevertheless permit more than one plausible amino acid. A design model assigns probabilities to these alternatives. SynthIDBio-sequence uses some of that flexibility to introduce a pattern that a corresponding detector can recognize."
+      },
+      {
+        "type": "paragraph",
+        "text": "The authors adapt a text-watermarking method to ProteinMPNN, a model that designs amino-acid sequences for a supplied protein backbone. A secret key and the recent sequence context determine scores for candidate residues. During sampling, the method favors candidates with higher scores. Across the completed sequence, these small preferences accumulate into statistical evidence. The watermark is distributed through the generation choices; no separate chemical label needs to be attached."
+      },
+      {
+        "type": "paragraph",
+        "text": "There is a genuine design tension here. Strongly constrained positions offer little choice, while increasing sampling diversity can make detection easier and alter which designs survive downstream filters. The paper compares two watermarking settings. One is called non-distortionary, referring to a mathematical property averaged over keys. That term should not be read as a guarantee that every individual protein is biologically unaffected."
+      },
+      {
+        "type": "paragraph",
+        "text": "The DNA used to express a designed binder encodes its amino-acid choices. This study therefore concerns provenance in a protein-design pipeline, rather than a general method for watermarking genomes or recovering the origin of any physical protein sample. The detector needs an appropriate digital input and the corresponding detection procedure."
+      },
+      {
+        "type": "heading",
+        "text": "A sequence and a coordinate file are different objects"
+      },
+      {
+        "type": "paragraph",
+        "text": "SynthIDBio-structure addresses a separate output: the atomic coordinates predicted by AlphaFold 3. The authors fine-tune the structure model while training a detector to recognize small patterns in local geometry. Its training objective balances structural prediction quality with watermark detection. Because detection uses local geometric features, translating or rotating the complete coordinate model does not remove the relevant information."
+      },
+      {
+        "type": "paragraph",
+        "text": "This signal belongs to a digital prediction. The experiment does not show that a synthesized molecule would physically retain the same coordinate watermark, and it does not modify the supplied amino-acid sequence. Structure quality is assessed computationally, whereas the sequence work also includes laboratory binding measurements. Keeping those evidence types separate prevents the phrase “watermarked protein” from carrying more meaning than the experiment supports."
+      },
+      {
+        "type": "paragraph",
+        "text": "For their recommended structure model, the authors report similar aggregate structural accuracy to the AlphaFold 3 baseline in the evaluated benchmark. Detection exceeds 99.8% sensitivity at a 0.1% false-positive rate across the three trained variants. Those results establish a promising trade-off in the tested setting; individual local geometries and downstream scientific uses still require their own scrutiny."
+      },
+      {
+        "type": "link",
+        "text": "Mechanisms and structure evaluation: Figures 1 and 4 in the paper",
+        "href": "https://www.nature.com/articles/s41586-026-10965-y"
+      },
+      {
+        "type": "heading",
+        "text": "What “function-preserving” means in the laboratory"
+      },
+      {
+        "type": "paragraph",
+        "text": "The wet-lab study starts from fifteen previously validated AlphaProteo binder backbones for each of three targets: PD-L1, VEGF-A and the SARS-CoV-2 receptor-binding domain. These 45 starting backbones provide a deliberately favorable and biologically grounded test of sequence redesign. They are not an unrestricted sample of protein functions or a fresh end-to-end design campaign."
+      },
+      {
+        "type": "paragraph",
+        "text": "The authors compare 222 new non-watermarked designs with 267 designs from each of two watermarking settings, alongside parent binders and negative controls. After expression, surface plasmon resonance measures binding. The study obtains low-nanomolar binders for the viral receptor-binding domain and subnanomolar binders for PD-L1 and VEGF-A. These are successful examples within the experiment, rather than the performance of every candidate."
+      },
+      {
+        "type": "paragraph",
+        "text": "The reported affinity distributions do not differ significantly between either watermarked group and the non-watermarked comparator. At the tighter hit-rate thresholds, at or below 100 nM, the study likewise finds no significant difference. There is an important exception: at the broader 1 micromolar threshold, the non-distortionary group has a lower hit rate, with 155 of 267 designs compared with 150 of 222 non-watermarked designs."
+      },
+      {
+        "type": "paragraph",
+        "text": "A careful conclusion is that watermarked binders retained measured binding activity, with broadly comparable affinity distributions in this selected three-target experiment. A nonsignificant difference does not establish exact equivalence. Binding also leaves many other properties untested, including catalytic activity, cellular efficacy, toxicity, immunogenicity and long-term stability. The evidence is strongest when the claim remains close to what was measured."
+      },
+      {
+        "type": "link",
+        "text": "Experimental evidence: Figure 2 and the protein expression and binding methods",
+        "href": "https://www.nature.com/articles/s41586-026-10965-y"
+      },
+      {
+        "type": "heading",
+        "text": "Why 100% detection needs a denominator"
+      },
+      {
+        "type": "paragraph",
+        "text": "The sequence pipeline adds a useful engineering step: it retains candidates only if they pass both design-quality filters and a watermark-detectability threshold. The reported 100% sequence detection rate applies to that selected output. Detection is part of the acceptance criterion. Without this extra filter, sensitivity varies across settings."
+      },
+      {
+        "type": "paragraph",
+        "text": "That distinction changes how we would evaluate a service using the method. We would want to know how many candidates were generated, how many passed the structural filters, how many passed the watermark filter, and how many ultimately worked in an assay. Perfect detection among released candidates can be valuable, but it should travel with the yield and cost required to obtain them."
+      },
+      {
+        "type": "paragraph",
+        "text": "False positives require equal attention. A 0.1% false-positive rate corresponds to roughly one false flag per thousand unwatermarked inputs under the relevant calibration conditions. It does not make each positive result 99.9% certain. As a simple illustration, screening a million genuinely unwatermarked inputs would produce about a thousand false flags if that rate held. The reliability of a positive call also depends on how common the watermark is in the screened population."
+      },
+      {
+        "type": "paragraph",
+        "text": "Calibration is therefore part of the method’s scientific validity. The authors use nearly 3.5 million natural and non-watermarked sequences, including short natural fragments. Their supplementary analyses show why the length and unit of testing matter: a threshold calibrated on complete sequences can behave differently when applied to short windows. We would need to validate a detector on the actual objects and transformations in the intended workflow."
+      },
+      {
+        "type": "link",
+        "text": "Detection, output selection and calibration: Figure 3 in the paper",
+        "href": "https://www.nature.com/articles/s41586-026-10965-y"
+      },
+      {
+        "type": "link",
+        "text": "Further detail: Supplementary Information, sections A.2 and A.7",
+        "href": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-026-10965-y/MediaObjects/41586_2026_10965_MOESM1_ESM.pdf"
+      },
+      {
+        "type": "heading",
+        "text": "A useful signal still has a maintenance cost"
+      },
+      {
+        "type": "paragraph",
+        "text": "The paper examines robustness rather than assuming that the watermark is permanent. Some tested changes preserve detectability, while other transformations can remove it. For sequences, estimates of the biological consequences of removal combine current and historical data; they are not a comprehensive new wet-lab validation of every modified output. A practical deployment would need to establish which ordinary processing steps preserve a useful signal."
+      },
+      {
+        "type": "paragraph",
+        "text": "The computational cost also depends on which part of the pipeline we count. Stricter sequence-watermark filtering is relatively cheap in the authors’ cost model because it happens before expensive structure evaluation. Yet producing a design that passes the full pipeline still costs more than the unwatermarked baseline. Those are modeled computational costs under specified assumptions, not all-in laboratory costs or a production price list. The structure method has a separate training cost; the authors report no additional structure-inference overhead."
+      },
+      {
+        "type": "link",
+        "text": "Robustness and limitations: Results and Discussion in the paper",
+        "href": "https://www.nature.com/articles/s41586-026-10965-y"
+      },
+      {
+        "type": "link",
+        "text": "Computational cost model: Supplementary Information, sections A.5–A.6",
+        "href": "https://media.springernature.com/original/springer-static/esm/art%3A10.1038%2Fs41586-026-10965-y/MediaObjects/41586_2026_10965_MOESM1_ESM.pdf"
+      },
+      {
+        "type": "heading",
+        "text": "What does a provenance flag justify?"
+      },
+      {
+        "type": "paragraph",
+        "text": "Both schemes detect the presence of a watermark rather than embedding a rich message. With a managed association between a detector and a participating service, the signal can support a claim about provenance. It does not independently identify the person who used that service or reconstruct a complete design history. Explicit metadata remains necessary."
+      },
+      {
+        "type": "paragraph",
+        "text": "The distinction is especially important for biological safety. Provenance asks how an object was produced. Functional validation asks what it does under specified conditions. Biosafety and biosecurity assessment address possible harm and appropriate safeguards. A watermark may contribute to a layered screening system, but its presence does not certify safety or replace established screening. The paper discusses possible operating arrangements rather than demonstrating a deployed risk classifier."
+      },
+      {
+        "type": "paragraph",
+        "text": "A negative result is also inconclusive about natural origin. It can arise from an unwatermarked tool, subsequent processing, an unsupported input or too little detectable signal. A positive result is statistical evidence that deserves contextual review, particularly when the consequences include rejecting a synthesis request or questioning the integrity of a scientific record."
+      },
+      {
+        "type": "paragraph",
+        "text": "For research databases, an immediate value would be preserving the distinction between generated hypotheses and measured evidence when source labels become separated from files. A predicted structure can be scientifically useful while remaining a prediction. Watermarking could supply an additional check; model versions, source labels, processing records and experimental validation still carry essential information."
+      },
+      {
+        "type": "heading",
+        "text": "What we would ask before using it"
+      },
+      {
+        "type": "paragraph",
+        "text": "The following are proposed evaluation criteria, rather than experiments our lab has performed or deployment results reported by the authors:"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Keep the objects separate. Link designed sequences, predicted coordinates and experimental measurements without allowing one to stand in for another.",
+          "Preserve ordinary provenance. Record the model and version, design stage, filtering decisions and subsequent processing alongside the output.",
+          "Validate the detector locally. Use the lengths, object types, transformations and decision units that the real workflow will encounter.",
+          "Report the full trade-off. Present sensitivity, false-positive rate, candidate rejection and computational cost together.",
+          "Define the response to a flag. Use detection to guide provenance review, with independent functional validation and established safety screening continuing in parallel."
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "The takeaway"
+      },
+      {
+        "type": "paragraph",
+        "text": "SynthIDBio provides a concrete proof of concept: evidence of a generation process can be embedded in protein-design outputs while preserving useful performance in the tested settings. Its strongest contribution is making provenance an experimentally testable design constraint. The next step is to establish how that signal behaves across broader functions, routine processing and real decision systems, where an error has a consequence beyond a benchmark score."
+      },
+      {
+        "type": "paragraph",
+        "text": "Reading route: start with Figure 1 for the two mechanisms, Figure 2 for the binding evidence and Figure 3 for selection and detection. Then read the Discussion on scientific integrity and limitations, followed by the supplementary calibration and cost analyses. The circular artwork is an original conceptual illustration; its red positions are explanatory and do not show measured residue contributions or a specific designed binder."
+      },
+      {
+        "type": "link",
+        "text": "Read the full open-access paper",
+        "href": "https://www.nature.com/articles/s41586-026-10965-y"
+      },
+      {
+        "type": "link",
+        "text": "Official software resource: Google DeepMind’s SynthIDBio repository",
+        "href": "https://github.com/google-deepmind/synthidbio"
+      }
+    ]
+  },
+  {
     "slug": "before-we-trust-spatial-ai",
     "title": "Before we trust spatial AI, we need to trust the cell",
     "date": "2026-09-30",

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+  <title id="title">A pattern within a protein</title>
+  <desc id="desc">Our conceptual illustration of a folded protein binder beside its target. Red marks are distributed along the chain; a small lens suggests a pattern across sequence positions. The marks do not identify actual watermarked residues or experimental results.</desc>
+  <defs>
+    <clipPath id="round"><circle cx="300" cy="300" r="300"/></clipPath>
+    <clipPath id="lens"><circle cx="391" cy="404" r="76"/></clipPath>
+  </defs>
+  <g clip-path="url(#round)">
+    <path fill="#f5f3ed" d="M0 0h600v600H0z"/>
+    <circle cx="300" cy="300" r="265" fill="none" stroke="#d4d5cd" stroke-width="1.5"/>
+
+    <path d="M377 129C410 114 452 132 469 160C484 184 469 198 486 222C512 257 501 296 470 309C444 320 426 302 422 279C418 253 396 250 377 256C357 262 343 244 350 227C358 208 385 210 381 189C377 172 350 142 377 129Z" fill="#eae7df" stroke="#191c1a" stroke-width="3"/>
+    <path d="M411 153C432 151 449 166 449 184M462 245C474 255 478 273 466 282" fill="none" stroke="#c4c3bb" stroke-width="3" stroke-linecap="round"/>
+
+    <path d="M122 306C89 282 100 232 138 222C183 209 200 240 184 269C168 299 192 326 225 315C258 304 257 271 235 245C212 218 171 206 183 172C196 134 239 138 263 163C291 192 265 220 280 244C295 267 334 258 333 226C332 198 303 180 309 155C315 134 340 135 352 155M352 155C374 187 346 214 322 243C302 267 331 292 317 320C301 352 257 338 258 372C260 403 299 422 326 396M326 396C352 371 326 345 296 352C268 358 247 394 211 388C179 382 176 345 150 345C134 345 122 354 118 368" fill="none" stroke="#191c1a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <g fill="#f5f3ed" stroke="#191c1a" stroke-width="3">
+      <circle cx="122" cy="306" r="7"/>
+      <circle cx="138" cy="222" r="7"/>
+      <circle cx="225" cy="315" r="7"/>
+      <circle cx="183" cy="172" r="7"/>
+      <circle cx="280" cy="244" r="7"/>
+      <circle cx="309" cy="155" r="7"/>
+      <circle cx="317" cy="320" r="7"/>
+      <circle cx="258" cy="372" r="7"/>
+      <circle cx="211" cy="388" r="7"/>
+      <circle cx="118" cy="368" r="7"/>
+    </g>
+    <g fill="#cf4536" stroke="#f5f3ed" stroke-width="3">
+      <circle cx="184" cy="269" r="10"/>
+      <circle cx="235" cy="245" r="10"/>
+      <circle cx="263" cy="163" r="10"/>
+      <circle cx="352" cy="155" r="10"/>
+      <circle cx="322" cy="243" r="10"/>
+      <circle cx="296" cy="352" r="10"/>
+      <circle cx="150" cy="345" r="10"/>
+    </g>
+
+    <path d="M283 293L335 354" fill="none" stroke="#7b342e" stroke-width="2" stroke-dasharray="5 7" stroke-linecap="round"/>
+    <path d="M441 461L466 486" fill="none" stroke="#191c1a" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="391" cy="404" r="76" fill="#f5f3ed" stroke="#191c1a" stroke-width="3"/>
+    <g clip-path="url(#lens)">
+      <path d="M335 380H428C444 380 450 389 450 402C450 415 441 428 427 428H337" fill="none" stroke="#191c1a" stroke-width="3.5" stroke-linecap="round"/>
+      <g fill="#f5f3ed" stroke="#191c1a" stroke-width="2.5">
+        <circle cx="340" cy="380" r="6"/><circle cx="384" cy="380" r="6"/><circle cx="406" cy="380" r="6"/>
+        <circle cx="428" cy="428" r="6"/><circle cx="384" cy="428" r="6"/><circle cx="340" cy="428" r="6"/>
+      </g>
+      <g fill="#cf4536">
+        <circle cx="362" cy="380" r="7.5"/><circle cx="428" cy="380" r="7.5"/>
+        <circle cx="406" cy="428" r="7.5"/><circle cx="362" cy="428" r="7.5"/>
+      </g>
+    </g>
+  </g>
+</svg>
