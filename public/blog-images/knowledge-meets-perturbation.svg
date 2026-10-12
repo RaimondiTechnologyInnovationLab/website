@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600" role="img" aria-labelledby="title desc">
+<title id="title">Knowledge meets a held-out experiment</title>
+<desc id="desc">Conceptual illustration: curated evidence cards feed a grid of cellular contexts and perturbations. A red outlined missing condition is connected to a predicted population response. Shapes are explanatory, not experimental data.</desc>
+<rect width="600" height="600" fill="#f5f3ed"/>
+<circle cx="300" cy="300" r="260" fill="#eae7df"/>
+<g fill="#f5f3ed" stroke="#191c1a" stroke-width="3">
+<rect x="125" y="112" width="95" height="112" rx="9" transform="rotate(-8 172 168)"/>
+<rect x="242" y="104" width="95" height="112" rx="9"/>
+<rect x="359" y="112" width="95" height="112" rx="9" transform="rotate(8 406 168)"/>
+</g>
+<g fill="none" stroke="#191c1a" stroke-width="3" stroke-linecap="round">
+<path d="M147 150l17 28 27-39M161 155l31 19M266 139h47M266 158h37M266 177h44M382 148h38M382 165h26M382 182h32"/>
+<path d="M180 234v27h120m100-27v27H300m0-34v54"/>
+</g>
+<g stroke="#191c1a" stroke-width="2.5">
+<rect x="135" y="304" width="190" height="164" rx="10" fill="#f5f3ed"/>
+<path d="M198 304v164M261 304v164M135 359h190M135 414h190" fill="none"/>
+</g>
+<g fill="#191c1a"><circle cx="166" cy="332" r="10"/><circle cx="230" cy="332" r="10"/><circle cx="292" cy="332" r="10"/><circle cx="166" cy="386" r="10"/><circle cx="230" cy="386" r="10"/><circle cx="166" cy="441" r="10"/><circle cx="230" cy="441" r="10"/></g>
+<circle cx="292" cy="386" r="13" fill="#e9c2b8" stroke="#cf4536" stroke-width="3"/>
+<rect x="267" y="420" width="51" height="42" rx="5" fill="#f5f3ed" stroke="#cf4536" stroke-width="3" stroke-dasharray="6 5"/>
+<path d="M320 441h39v-54h20m-9-8l9 8-9 8" fill="none" stroke="#cf4536" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<g stroke="#191c1a" stroke-width="2.5"><path d="M397 331v108m-12-54h93" fill="none"/></g>
+<g fill="#cf4536"><rect x="407" y="350" width="12" height="35" rx="2"/><rect x="431" y="385" width="12" height="34" rx="2"/><rect x="455" y="366" width="12" height="19" rx="2"/></g>
+</svg>

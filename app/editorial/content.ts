@@ -59,6 +59,172 @@ const newsEntries: readonly EditorialEntry[] = [
   },
 ];
 const blogEntries: readonly EditorialEntry[] = [
+{
+  "slug": "what-a-virtual-cell-should-predict",
+  "title": "What should a virtual cell predict?",
+  "date": "2026-10-12",
+  "summary": "PIE uses biological knowledge to predict population-level perturbation effects. We examine its held-out tests, the meaning of zero-shot transfer, and what an experimental team should validate before relying on its predictions.",
+  "status": "published",
+  "image": {
+    "src": "/blog-images/knowledge-meets-perturbation.svg",
+    "alt": "Conceptual evidence cards feeding a grid of measured and held-out conditions, with an outlined missing condition linked to a predicted population response.",
+    "width": 600,
+    "height": 600
+  },
+  "body": [
+    {
+      "type": "paragraph",
+      "text": "A perturbation screen leaves a familiar kind of unfinished map: some interventions have been measured in one cell system, fewer in another, and most possible combinations remain blank. Filling a blank is a useful ambition for AI. But first we need to decide what belongs in that square. A synthetic profile for every cell? A distribution of possible states? Or a ranked list of genes expected to respond? Those are different prediction problems, with different experimental uses."
+    },
+    {
+      "type": "paragraph",
+      "text": "PIE, introduced by Rishi Verma and colleagues at Arc Institute in an October 2026 preprint and released on October 5, chooses a population-level target. It predicts population-level transcriptional effects using existing biological knowledge alongside experimental evidence. We examine the public model release, code documentation and benchmark cards to understand what this narrower target makes possible, and what it leaves unresolved. The work is a preprint, not peer-reviewed validation."
+    },
+    {
+      "type": "link",
+      "text": "Primary preprint: Verma et al., PIE: Generalizing perturbation effects across unseen perturbations, contexts and datasets",
+      "href": "https://doi.org/10.64898/2026.10.02.756297"
+    },
+    {
+      "type": "heading",
+      "text": "Start with the quantity an experiment can test"
+    },
+    {
+      "type": "paragraph",
+      "text": "PIE returns three outputs for each measured gene: a probability of differential expression, a predicted log2 fold change, and a predicted change in mean expression on the preprocessed scale. These describe a population response. They do not reconstruct the fate of an individual cell, nor establish which subpopulation produced the change."
+    },
+    {
+      "type": "paragraph",
+      "text": "This distinction matters experimentally. Imagine a treatment for which half the cells increase a transcript and half decrease it. A population mean can conceal that split. Conversely, if the immediate decision is which ten perturbations to test next for a reproducible population shift, estimating every individual transcriptome may be unnecessary. A useful model should be judged against the decision it is meant to support, rather than the breadth suggested by the phrase virtual cell."
+    },
+    {
+      "type": "link",
+      "text": "Author-maintained within-dataset model card: output definitions and evaluation",
+      "href": "https://huggingface.co/arcinstitute/PIE_replogle_wdataset"
+    },
+    {
+      "type": "heading",
+      "text": "Give the model more than a perturbation name"
+    },
+    {
+      "type": "paragraph",
+      "text": "An unseen gene identifier is a weak basis for extrapolation. PIE supplies representations of what is already known about the experimental context and perturbation. Arc describes inputs drawn from curated resources, including cell-line descriptions, gene annotations and dependency profiles. It also uses control-cell expression and pooled response evidence from the training data. The model therefore combines prior knowledge with measurements rather than expecting one expression matrix to contain every relevant relationship."
+    },
+    {
+      "type": "paragraph",
+      "text": "The architecture is based on Perceiver IO: heterogeneous input representations are combined into a latent representation that can be queried for outputs. Gene descriptions provide queries for the genes whose responses are requested. This separates the input evidence from the output vocabulary. In practical terms, a model can receive different kinds of evidence about a condition while still returning comparable gene-level readouts."
+    },
+    {
+      "type": "link",
+      "text": "Official implementation and released experiment definitions",
+      "href": "https://github.com/ArcInstitute/pie"
+    },
+    {
+      "type": "paragraph",
+      "text": "A useful way to think about this is a structured evidence dossier. A gene description can connect an unfamiliar target to known processes; a dependency profile can describe how biological contexts differ; control expression anchors the untreated state. This is an explanatory analogy, not a claim that the model reasons like a scientist. A convincing-looking annotation can also encode yesterday’s consensus, uneven coverage or information closely related to the evaluation target."
+    },
+    {
+      "type": "link",
+      "text": "Arc’s October 5 release: knowledge sources and design rationale",
+      "href": "https://arcinstitute.org/news/pie"
+    },
+    {
+      "type": "heading",
+      "text": "Unseen is not a single experimental condition"
+    },
+    {
+      "type": "paragraph",
+      "text": "The released within-dataset benchmark separates three tests: a held-out cell line with previously observed perturbations; new perturbations in the training cell lines; and both a held-out line and new perturbations. Four models hold out HepG2, Jurkat, K562 or RPE1 in turn. The model card reports mean AUPRC values of 0.4155, 0.3048 and 0.2366, respectively, across those four folds."
+    },
+    {
+      "type": "paragraph",
+      "text": "AUPRC measures how well a score ranks positive cases across precision–recall trade-offs. Here it concerns differential-expression classification, not an overall percentage of correct biological predictions. Its interpretation depends on how common positive labels are and how those labels were defined. The decreasing values are informative about difficulty within this release; they should not be read as a universal exchange rate between cell lines, donors and tissues."
+    },
+    {
+      "type": "paragraph",
+      "text": "For a prospective experiment, this separation suggests a simple question to ask before choosing a checkpoint: which part of our intended test is actually new? A previously tested intervention in a new context and an unfamiliar intervention in that context place different demands on a model. Reporting them together can hide the failure mode that matters most."
+    },
+    {
+      "type": "link",
+      "text": "Four-fold benchmark definitions, means and standard deviations",
+      "href": "https://huggingface.co/arcinstitute/PIE_replogle_wdataset#evaluation"
+    },
+    {
+      "type": "heading",
+      "text": "Zero-shot transfer still needs an untreated reference"
+    },
+    {
+      "type": "paragraph",
+      "text": "A second released model trains on Tahoe, Jiang, ARC VCC 25 and Orion, then evaluates on Replogle without training or fine-tuning on Replogle response labels. The author-maintained card explicitly states that target-context control expression is an inference input. Zero-shot here therefore means no training on the target response labels; it does not mean that the target biological system is represented by no measurements at all."
+    },
+    {
+      "type": "paragraph",
+      "text": "The cross-dataset card reports mean AUPRC of 0.3802 for perturbations seen in training and 0.2463 for unseen perturbations, with equal weight across the four target cell lines. These are distinct evaluation groups, not a controlled estimate of how much any individual laboratory will gain. The accompanying assets include pinned dataset and split revisions, making it possible to identify what a reported checkpoint was allowed to see."
+    },
+    {
+      "type": "link",
+      "text": "Cross-dataset model card: training boundaries, control inputs and numerical results",
+      "href": "https://huggingface.co/arcinstitute/PIE_replogle_xdataset"
+    },
+    {
+      "type": "heading",
+      "text": "A benchmark needs a positive control too"
+    },
+    {
+      "type": "paragraph",
+      "text": "A separate peer-reviewed study by Miller, Mejia and colleagues, published in Nature Biotechnology on October 1, makes a complementary point. Across 14 datasets and 18 metrics, it tests whether evaluation metrics can distinguish informative positive controls from uninformative baselines. Its calibration analysis shows why averaging error over many weakly changing genes can obscure perturbation-specific signal. It is not an independent validation of PIE."
+    },
+    {
+      "type": "paragraph",
+      "text": "We should take two lessons together. A high aggregate score does not guarantee useful perturbation discrimination, and a disappointing score does not automatically show that a model learned nothing. Choose the biological question first, then inspect multiple views of performance: gene ranking, effect direction and size, and whether different interventions can actually be distinguished. No single metric makes the other checks redundant."
+    },
+    {
+      "type": "link",
+      "text": "Peer-reviewed context: Deep learning perturbation models can outperform baselines on calibrated metrics",
+      "href": "https://www.nature.com/articles/s41587-026-03307-w"
+    },
+    {
+      "type": "heading",
+      "text": "What we would require before trusting a new application"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Define the target output. A population shift, a rare responding state and a change in cell-state proportions require different validation readouts.",
+        "Freeze the evidence boundary. Record training splits, checkpoint versions, annotation sources and which target-context controls are supplied. Audit overlap instead of treating an unseen label as proof of independence.",
+        "Compare against an appropriate simple baseline and an empirical positive control. Keep preprocessing and test populations identical across comparisons.",
+        "Test a genuinely new experimental context. Four cell-line folds do not establish transfer to primary donors, disease tissue, another time point or another perturbation modality.",
+        "Retain experimental uncertainty. A predicted differential-expression probability is not automatically a calibrated probability of replication in our laboratory.",
+        "Use predictions to prioritize a bounded experiment. Prespecify the readout and success criterion before seeing whether the favored candidates work."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "These are our proposed evaluation criteria, not additional experiments reported by the PIE authors. They deliberately separate a promising ranking tool from a validated biological simulator. They also preserve a role for measurements that an aggregate predictor cannot supply: heterogeneity, transient states, and responses whose importance is not captured by mean RNA abundance."
+    },
+    {
+      "type": "heading",
+      "text": "The practical change is a more precise ambition"
+    },
+    {
+      "type": "paragraph",
+      "text": "PIE makes a concrete contribution to the virtual-cell discussion: a model can aim directly at interpretable screen-level effects and bring curated knowledge into the prediction. That is a useful alternative to judging progress only by how comprehensively a system appears to imitate a cell. The immediate opportunity is to ask better questions of missing experiments; the obligation is to test whether the proposed answers survive a change of context."
+    },
+    {
+      "type": "paragraph",
+      "text": "Reading note: this article draws on the authors’ public release, model cards and implementation documentation, with the linked preprint as the primary research record. We did not independently reproduce the benchmark or inspect its complete manuscript and supplementary analyses. Numerical results above are author-reported. The illustration is conceptual and contains no experimental data."
+    },
+    {
+      "type": "paragraph",
+      "text": "For reuse, check the terms of each asset: the code repository lists CC BY-NC-SA 4.0, while the model cards identify a separate non-commercial checkpoint license and acceptable-use policy. Public availability is not blanket permission for every deployment."
+    },
+    {
+      "type": "link",
+      "text": "Code license and project documentation",
+      "href": "https://github.com/ArcInstitute/pie#license"
+    }
+  ]
+},
   {
     "slug": "a-protein-can-carry-a-watermark",
     "title": "A protein can carry a watermark. What does it prove?",
